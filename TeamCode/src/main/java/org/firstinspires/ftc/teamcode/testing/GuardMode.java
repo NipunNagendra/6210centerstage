@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="GuardMode", group="TeleOp")
 public class GuardMode extends LinearOpMode {
    public static double xyParameter = .2;
     public static double headingParameter = .2;
