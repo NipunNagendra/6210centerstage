@@ -38,11 +38,11 @@ public class Drivetrain {
         BR.setPower(rightPower);
     }
 
-    public void setRobotWeightedDrivePower(Pose2d drivePower) {
-        Pose2d vel = drivePower;
+    public void setRobotWeightedDrivePower(Pose drivePower) {
+        Pose vel = drivePower;
         if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.getHeading()) > 1) {
             double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
-            vel = new Pose2d(
+            vel = new Pose(
                     VX_WEIGHT * drivePower.getX(),
                     VY_WEIGHT * drivePower.getY(),
                     OMEGA_WEIGHT * drivePower.getHeading()
@@ -55,13 +55,13 @@ public class Drivetrain {
         BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.getHeading());
     }
 
-    public void setFieldWeightedDrivePower(Pose2d drivePower, double heading) {
-        Vector2d fieldFrame = new Vector2d(drivePower.getX(), drivePower.getY()).rotate(-heading);
-        Pose2d vel = new Pose2d(fieldFrame.getX(), fieldFrame.getY(), drivePower.getHeading());
+    public void setFieldWeightedDrivePower(Pose drivePower, double heading) {
+        Vector fieldFrame = new Vector(drivePower.getX(), drivePower.getY()).rotate(-heading);
+        Pose vel = new Pose(fieldFrame.getX(), fieldFrame.getY(), drivePower.getHeading());
 
         if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.getHeading()) > 1) {
             double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
-            vel = new Pose2d(
+            vel = new Pose(
                     VX_WEIGHT * drivePower.getX(),
                     VY_WEIGHT * drivePower.getY(),
                     OMEGA_WEIGHT * drivePower.getHeading()
