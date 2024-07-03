@@ -1,28 +1,40 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
+
+import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
+import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
+
+import java.util.Locale;
+
 public class Waypoint {
-    double x;
-    double y;
-    double distance;
-    double curvature;
-    double velocity;
-    boolean endpoint = false;
+    private final Waypoint.Type type;
+    private final Point point;
+    private final double radius;
 
-    public Waypoint(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public Waypoint(Point point, double radius) {
+        this.type = point instanceof Pose ? Type.POSE : Type.POINT;
+        this.point = point;
+        this.radius = radius;
     }
 
-    public Waypoint(Waypoint waypoint) {
-        this.x = waypoint.x;
-        this.y = waypoint.y;
+    public Waypoint.Type getType() {
+        return this.type;
     }
 
-    public void setDistance(double distance){
-        this.distance = distance;
+    public Point getPoint() {
+        return this.point;
     }
-    public void setCurvature(double curvature){
-        this.curvature = curvature;
+
+    public double getRadius() {
+        return this.radius;
     }
-    public void setEndpoint(boolean endpoint){this.endpoint = endpoint;}
+
+    public enum Type {
+        POINT, POSE
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.ENGLISH, "%s %s %.2f", getType(), getPoint(), getRadius());
+    }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivepp;
+package org.firstinspires.ftc.teamcode.legacy;
 
 public class TargetPoint extends Waypoint{
     public TargetPoint(double x, double y) {

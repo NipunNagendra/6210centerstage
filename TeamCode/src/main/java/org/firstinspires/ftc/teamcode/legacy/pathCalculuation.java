@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivepp;
-
-import static org.firstinspires.ftc.teamcode.drivepp.pathBuilder.calculateVectorMagnitude;
+package org.firstinspires.ftc.teamcode.legacy;
 
 public class pathCalculuation {
     //TODO: Check this bruh

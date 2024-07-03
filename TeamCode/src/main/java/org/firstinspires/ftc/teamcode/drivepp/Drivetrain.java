@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.drivepp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
+import org.firstinspires.ftc.teamcode.legacy.Poseold;
+import org.firstinspires.ftc.teamcode.legacy.Vector;
+
 public class Drivetrain {
     DcMotor FL;
     DcMotor FR;
@@ -40,37 +44,38 @@ public class Drivetrain {
 
     public void setRobotWeightedDrivePower(Pose drivePower) {
         Pose vel = drivePower;
-        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.getHeading()) > 1) {
-            double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
+        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading) > 1) {
+            double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.heading);
             vel = new Pose(
                     VX_WEIGHT * drivePower.getX(),
                     VY_WEIGHT * drivePower.getY(),
-                    OMEGA_WEIGHT * drivePower.getHeading()
-            ).div(denom);
+                    OMEGA_WEIGHT * drivePower.heading
+            ).scale(1/denom);
         }
 
-        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.getHeading());
-        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.getHeading());
-        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.getHeading());
-        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.getHeading());
+        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.heading);
+        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.heading);
+        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.heading);
+        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.heading);
     }
 
     public void setFieldWeightedDrivePower(Pose drivePower, double heading) {
         Vector fieldFrame = new Vector(drivePower.getX(), drivePower.getY()).rotate(-heading);
-        Pose vel = new Pose(fieldFrame.getX(), fieldFrame.getY(), drivePower.getHeading());
+        Pose vel = new Pose(fieldFrame.getX(), fieldFrame.getY(), drivePower.heading);
 
-        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.getHeading()) > 1) {
-            double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
+        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading) > 1) {
+            double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.heading);
             vel = new Pose(
                     VX_WEIGHT * drivePower.getX(),
                     VY_WEIGHT * drivePower.getY(),
-                    OMEGA_WEIGHT * drivePower.getHeading()
-            ).div(denom);
+                    OMEGA_WEIGHT * drivePower.heading).scale(1/denom);
         }
 
-        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.getHeading());
-        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.getHeading());
-        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.getHeading());
-        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.getHeading());
+        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.heading);
+        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.heading);
+        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.heading);
+        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.heading);
     }
+
+
 }
