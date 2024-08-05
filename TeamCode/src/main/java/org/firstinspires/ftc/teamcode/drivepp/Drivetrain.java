@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
@@ -26,6 +27,9 @@ public class Drivetrain {
         this.FR = hardwareMap.get(DcMotor.class, "FR");
         this.BL = hardwareMap.get(DcMotor.class, "BL");
         this.BR = hardwareMap.get(DcMotor.class, "BR");
+
+        this.FL.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.BL.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void setPower(double power) {
@@ -44,19 +48,11 @@ public class Drivetrain {
 
     public void setRobotWeightedDrivePower(Pose drivePower) {
         Pose vel = drivePower;
-        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading) > 1) {
-            double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.heading);
-            vel = new Pose(
-                    VX_WEIGHT * drivePower.getX(),
-                    VY_WEIGHT * drivePower.getY(),
-                    OMEGA_WEIGHT * drivePower.heading
-            ).scale(1/denom);
-        }
 
-        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.heading);
-        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.heading);
-        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.heading);
-        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.heading);
+        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.heading);
+        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.heading);
+        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.heading);
+        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.heading);
     }
 
     public void setFieldWeightedDrivePower(Pose drivePower, double heading) {

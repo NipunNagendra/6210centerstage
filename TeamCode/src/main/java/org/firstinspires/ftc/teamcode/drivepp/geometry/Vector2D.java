@@ -69,4 +69,8 @@ public class Vector2D {
     public String toString() {
         return String.format("{%.2f, %.2f}", x, y);
     }
+
+    public double atan() {
+        return Math.atan2(y, x);
+    }
 }

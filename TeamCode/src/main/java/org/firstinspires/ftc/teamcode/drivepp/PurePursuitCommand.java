@@ -12,20 +12,18 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
 
 @Config
-public class PurePursuitCommand{
+public class PurePursuitCommand {
     private final Drivetrain drivetrain;
-    private final FusedLocalizer localizer;
+    private final TwoWheelIMULocalizer localizer;
     private final PurePursuitPath purePursuitPath;
     private final Pose endPose;
 
     private boolean PID = false;
     private boolean finished = false;
 
-
     public static BasicPID xController = new BasicPID(new PIDCoefficients(xP, 0.0, xD));
     public static BasicPID yController = new BasicPID(new PIDCoefficients(yP, 0.0, yD));
     public static BasicPID hController = new BasicPID(new PIDCoefficients(hP, 0.0, hD));
-    private Drivetrain drivetrain;
 
     private ElapsedTime accelLimit;
     private final double ACCEL_LIMIT = 0.5;
@@ -34,7 +32,8 @@ public class PurePursuitCommand{
 
     public PurePursuitCommand(PurePursuitPath purePursuitPath, HardwareMap hardwareMap) {
         this.drivetrain = new Drivetrain(hardwareMap);
-        this.localizer = robot.localizer;
+        this.localizer = new TwoWheelIMULocalizer(hardwareMap);
+        localizer.setPose(0,0,0);
         this.purePursuitPath = purePursuitPath;
         this.endPose = purePursuitPath.getEndPose();
     }
@@ -43,6 +42,7 @@ public class PurePursuitCommand{
         if (accelLimit == null) accelLimit = new ElapsedTime();
         if (purePursuitPath.isFinished()) PID = true;
 
+        localizer.update();
         Pose robotPose = localizer.getPose();
         Pose targetPose = purePursuitPath.update(robotPose);
 
@@ -53,13 +53,12 @@ public class PurePursuitCommand{
         if (PID && targetPose.subt(robotPose).toVec2D().magnitude() < PurePursuitConstants.ALLOWED_TRANSLATIONAL_ERROR
                 && Math.abs(targetPose.subt(robotPose).heading) < PurePursuitConstants.ALLOWED_HEADING_ERROR) finished = true;
 
-
         if (targetPose.heading - robotPose.heading > Math.PI) targetPose.heading -= 2 * Math.PI;
         if (targetPose.heading - robotPose.heading < -Math.PI) targetPose.heading += 2 * Math.PI;
 
-        double xPower = xController.calculate(robotPose.x, targetPose.x);
-        double yPower = yController.calculate(robotPose.y, targetPose.y);
-        double hPower = -hController.calculate(robotPose.heading, targetPose.heading);
+        double xPower = xController.calculate(targetPose.x, robotPose.x);
+        double yPower = yController.calculate(targetPose.y, robotPose.y);
+        double hPower = -hController.calculate(targetPose.heading, robotPose.heading);
 
         double x_rotated = xPower * Math.cos(-robotPose.heading) - yPower * Math.sin(-robotPose.heading);
         double y_rotated = xPower * Math.sin(-robotPose.heading) + yPower * Math.cos(-robotPose.heading);
@@ -74,6 +73,7 @@ public class PurePursuitCommand{
     public boolean isFinished() {
         return PID && finished || (timer != null && timer.milliseconds() > 2000);
     }
+
     public void end(boolean interrupted) {
         drivetrain.setFieldWeightedDrivePower(new Pose(), 0);
     }

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
 
+import org.firstinspires.ftc.teamcode.drivepp.geometry.Vector2D;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
 import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
@@ -20,7 +22,6 @@ public class PurePursuitPath {
     }
 
     public Pose update(Pose robot) {
-
         Waypoint prev = waypoints.get(targetIdx - 1);
         Waypoint target = waypoints.get(targetIdx);
 
@@ -35,14 +36,16 @@ public class PurePursuitPath {
                 targetPose = new Pose(intersection, ((Pose)target.getPoint()).heading);
             }else{
                 double robotAngle = AngleUnit.normalizeRadians(robot.heading);
-                double forwardAngle = -intersection.subtract(robot).atan();
-                double backwardsAngle = AngleUnit.normalizeRadians(forwardAngle + Math.PI);
 
-                double autoAngle =
-                        Math.abs(AngleUnit.normalizeRadians(robotAngle - forwardAngle)) <
-                                Math.abs(AngleUnit.normalizeRadians(robotAngle - backwardsAngle)) ?
-                                forwardAngle : backwardsAngle;
+                Vector2D intersectionVector = new Vector2D(intersection.x - robot.x, intersection.y - robot.y);
+                double forwardAngle = intersectionVector.atan(); // This is the target angle
+                double backwardAngle = AngleUnit.normalizeRadians(forwardAngle + Math.PI);
 
+                double angleToForward = AngleUnit.normalizeRadians(forwardAngle - robotAngle);
+                double angleToBackward = AngleUnit.normalizeRadians(backwardAngle - robotAngle);
+
+                double autoAngle = Math.abs(angleToForward) < Math.abs(angleToBackward) ? forwardAngle : backwardAngle;
+                autoAngle = AngleUnit.normalizeRadians(autoAngle);
                 targetPose = new Pose(intersection, autoAngle);
             }
 
@@ -68,5 +71,8 @@ public class PurePursuitPath {
 
     public double getRadius(){
         return waypoints.get(targetIdx).getRadius();
+    }
+    public LinkedList<Waypoint> getWaypoints(){
+        return waypoints;
     }
 }

@@ -13,9 +13,9 @@ public class PurePursuitConstants {
     public static double hP = 1.1;
     public static double hD = 0.045;
 
-    public static double MAX_TRANSLATIONAL_SPEED = 0.5;
+    public static double MAX_TRANSLATIONAL_SPEED = 1;
     public static double MAX_ROTATIONAL_SPEED = 0.4;
-    public static double X_GAIN = 2.00;
+    public static double X_GAIN = 1.00;
 
     public static double ALLOWED_TRANSLATIONAL_ERROR = 1;
     public static double ALLOWED_HEADING_ERROR = 0.03;
