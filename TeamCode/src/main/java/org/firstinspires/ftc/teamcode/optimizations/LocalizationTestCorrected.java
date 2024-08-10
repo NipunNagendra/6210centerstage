@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivepp.tests;
+package org.firstinspires.ftc.teamcode.optimizations;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
@@ -14,7 +13,7 @@ import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
 
 @TeleOp(name = "Localization Test", group = "Test")
 @Config
-public class LocalizationTest extends LinearOpMode {
+public class LocalizationTestCorrected extends LinearOpMode {
     private TwoWheelIMULocalizer localizer;
     private FtcDashboard dashboard;
     private Drivetrain drivetrain;

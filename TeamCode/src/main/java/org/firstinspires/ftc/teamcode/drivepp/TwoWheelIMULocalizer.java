@@ -7,9 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
+import org.firstinspires.ftc.teamcode.drivepp.geometry.Vector2D;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 public class TwoWheelIMULocalizer {
@@ -25,6 +27,9 @@ public class TwoWheelIMULocalizer {
 
     private int lastParallelEncoderPos = 0;
     private int lastPerpendicularEncoderPos = 0;
+
+    private ElapsedTime elapsedTime;
+    private Vector2D velocity;
 
     double offset = 0;
 
@@ -42,6 +47,9 @@ public class TwoWheelIMULocalizer {
 
         this.pose.x = PARALLEL_OFFSET;
         this.pose.y = PERPENDICULAR_OFFSET;
+
+        elapsedTime = new ElapsedTime();
+        this.velocity = new Vector2D(0,0);
     }
     public void update() {
         // Read the current encoder positions
@@ -66,6 +74,7 @@ public class TwoWheelIMULocalizer {
         // Calculate the robot's displacement
         double deltaY = distanceParallel * Math.cos(heading) + distancePerpendicular * Math.sin(heading);
         double deltaX = -distanceParallel * Math.sin(heading) + distancePerpendicular * Math.cos(heading);
+        velocity = calculateVelocity(deltaX, deltaY);
 
         // Update the pose
         pose = new Pose(
@@ -87,6 +96,10 @@ public class TwoWheelIMULocalizer {
         return pose;
     }
 
+    public Vector2D getVelocity() {
+        return velocity;
+    }
+
     public int getParallelEncoderPos() {
         return parallelEncoder.getCurrentPosition();
     }
@@ -102,5 +115,12 @@ public class TwoWheelIMULocalizer {
     public void setPose(double x, double y, double heading) {
         this.pose = new Pose(x+PARALLEL_OFFSET, y+PERPENDICULAR_OFFSET, heading);
         offset=heading;
+    }
+
+    private Vector2D calculateVelocity(double deltaX, double deltaY){ {
+        double dt = elapsedTime.seconds();
+        elapsedTime.reset();
+        return new Vector2D(deltaX / dt, deltaY / dt);
+    }
     }
 }

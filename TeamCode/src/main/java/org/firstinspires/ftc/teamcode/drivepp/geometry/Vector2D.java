@@ -73,4 +73,16 @@ public class Vector2D {
     public double atan() {
         return Math.atan2(y, x);
     }
+
+    public double norm() {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    public Vector2D add(Vector2D correctivePower) {
+        return new Vector2D(x + correctivePower.x, y + correctivePower.y);
+    }
+
+    public double sqrNorm() {
+        return x * x + y * y;
+    }
 }

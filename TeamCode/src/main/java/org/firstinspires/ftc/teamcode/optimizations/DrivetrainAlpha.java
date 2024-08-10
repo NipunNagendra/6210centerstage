@@ -1,14 +1,15 @@
-package org.firstinspires.ftc.teamcode.drivepp;
+package org.firstinspires.ftc.teamcode.optimizations;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
-import org.firstinspires.ftc.teamcode.legacy.Poseold;
+import org.firstinspires.ftc.teamcode.drivepp.geometry.PoseVelocity;
+import org.firstinspires.ftc.teamcode.drivepp.geometry.Vector2D;
 import org.firstinspires.ftc.teamcode.legacy.Vector;
 
-public class Drivetrain {
+public class DrivetrainAlpha {
     DcMotor FL;
     DcMotor FR;
     DcMotor BL;
@@ -22,7 +23,7 @@ public class Drivetrain {
     double d = (trackWidth + wheelBase) / 2.0;
 
 
-    public Drivetrain(HardwareMap hardwareMap) {
+    public DrivetrainAlpha(HardwareMap hardwareMap) {
         this.FL = hardwareMap.get(DcMotor.class, "FL");
         this.FR = hardwareMap.get(DcMotor.class, "FR");
         this.BL = hardwareMap.get(DcMotor.class, "BL");
@@ -80,5 +81,10 @@ public class Drivetrain {
         BR.setPower(f-t);
     }
 
+    public void driveWithCorrection(PoseVelocity powers, PoseVelocity currentVelocity){
+        Vector2D centripetalPower = calculateCentripetalPower(currentVelocity);
+        Vector2D combinedPower = combinePower(powers.linearVel, centripetalPower);
+
+    }
 
 }
