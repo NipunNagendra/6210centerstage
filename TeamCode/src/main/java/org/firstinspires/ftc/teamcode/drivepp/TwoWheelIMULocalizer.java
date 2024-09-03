@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.lynx.commands.core.LynxResetMotorEncoderCommand;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Vector2D;
-import org.firstinspires.ftc.teamcode.util.Encoder;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
+import org.firstinspires.ftc.teamcode.optimizations.RingBuffer;
+import org.firstinspires.ftc.teamcode.util.rrutil.Encoder;
 
 public class TwoWheelIMULocalizer {
     private Encoder parallelEncoder, perpendicularEncoder;
@@ -33,6 +31,8 @@ public class TwoWheelIMULocalizer {
 
     double offset = 0;
 
+    private RingBuffer poseHistory;
+
     public TwoWheelIMULocalizer(HardwareMap hardwareMap) {
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "BR"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "FR"));
@@ -50,6 +50,8 @@ public class TwoWheelIMULocalizer {
 
         elapsedTime = new ElapsedTime();
         this.velocity = new Vector2D(0,0);
+
+        this.poseHistory = new RingBuffer(3);
     }
     public void update() {
         // Read the current encoder positions
@@ -74,7 +76,7 @@ public class TwoWheelIMULocalizer {
         // Calculate the robot's displacement
         double deltaY = distanceParallel * Math.cos(heading) + distancePerpendicular * Math.sin(heading);
         double deltaX = -distanceParallel * Math.sin(heading) + distancePerpendicular * Math.cos(heading);
-        velocity = calculateVelocity(deltaX, deltaY);
+        velocity = calculateRobotRelativeVelocity(distancePerpendicular, distanceParallel);
 
         // Update the pose
         pose = new Pose(
@@ -82,6 +84,8 @@ public class TwoWheelIMULocalizer {
                 pose.y + deltaY,
                 heading
         );
+
+        poseHistory.put(pose);
     }
 
     private double encoderTicksToInches(int ticks) {
@@ -95,7 +99,7 @@ public class TwoWheelIMULocalizer {
     public Pose getPose() {
         return pose;
     }
-
+//TODO: CHANGE TO HEADING VELOCITY!!!!
     public Vector2D getVelocity() {
         return velocity;
     }
@@ -111,16 +115,25 @@ public class TwoWheelIMULocalizer {
         this.pose = pose;
     }
 
-    // Method to set the starting position using individual coordinates and heading
     public void setPose(double x, double y, double heading) {
         this.pose = new Pose(x+PARALLEL_OFFSET, y+PERPENDICULAR_OFFSET, heading);
         offset=heading;
     }
 
-    private Vector2D calculateVelocity(double deltaX, double deltaY){ {
+    private Vector2D calculateRobotRelativeVelocity(double deltaX, double deltaY){ {
         double dt = elapsedTime.seconds();
         elapsedTime.reset();
         return new Vector2D(deltaX / dt, deltaY / dt);
     }
     }
+
+    public Pose readPoseHistory(int index) {
+        return poseHistory.read(index);
+}
+
+    public Pose[] getPoseHistory() {
+        return poseHistory.getOldestToLatest();
+    }
+
+
 }

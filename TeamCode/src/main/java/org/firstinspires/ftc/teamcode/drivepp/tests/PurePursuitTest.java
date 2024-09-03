@@ -3,19 +3,9 @@ package org.firstinspires.ftc.teamcode.drivepp.tests;
 import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.MAX_ROTATIONAL_SPEED;
 import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.MAX_TRANSLATIONAL_SPEED;
 import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.X_GAIN;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.hD;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.hP;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.xD;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.xP;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.yD;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.yP;
-import static org.firstinspires.ftc.teamcode.drivepp.tests.HeadingPIDTest.hI;
-import static org.firstinspires.ftc.teamcode.drivepp.tests.XPIDTest.xI;
-import static org.firstinspires.ftc.teamcode.drivepp.tests.YPIDTest.yI;
 
 import static java.lang.Thread.sleep;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -23,7 +13,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -33,9 +22,9 @@ import org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants;
 import org.firstinspires.ftc.teamcode.drivepp.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
 import org.firstinspires.ftc.teamcode.drivepp.Waypoint;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
-import org.firstinspires.ftc.teamcode.drivepp.util.CustomBasicPID;
+import org.firstinspires.ftc.teamcode.util.geometry.Point;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,8 +164,11 @@ public class PurePursuitTest extends OpMode {
         packet.put("heading power", hPower);
         dashboard.sendTelemetryPacket(packet);
 
-        drivetrain.setFieldWeightedDrivePower(new Pose(x_rotated, y_rotated, hPower).scale(Math.min(accelLimit.seconds() / ACCEL_LIMIT, 1)), 0);
+//        drivetrain.setFieldWeightedDrivePower(new Pose(x_rotated, y_rotated, hPower).scale(Math.min(accelLimit.seconds() / ACCEL_LIMIT, 1)), 0);
+        drivetrain.setFieldWeightedDrivePower(new Pose(x_rotated, y_rotated, hPower), 0);
+
     }
+
 
     public boolean isFinished() {
         return PID && finished || (timer != null && timer.milliseconds() > 2000);

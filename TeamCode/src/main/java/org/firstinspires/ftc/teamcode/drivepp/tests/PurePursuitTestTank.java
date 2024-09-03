@@ -15,13 +15,12 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants;
 import org.firstinspires.ftc.teamcode.drivepp.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
 import org.firstinspires.ftc.teamcode.drivepp.Waypoint;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
-import org.firstinspires.ftc.teamcode.drivepp.util.CustomBasicPID;
+import org.firstinspires.ftc.teamcode.util.geometry.Point;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
 import java.util.ArrayList;
 import java.util.List;

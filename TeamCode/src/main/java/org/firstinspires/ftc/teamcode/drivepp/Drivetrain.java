@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
-import org.firstinspires.ftc.teamcode.legacy.Poseold;
-import org.firstinspires.ftc.teamcode.legacy.Vector;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
+
 
 public class Drivetrain {
     DcMotor FL;
@@ -56,7 +56,7 @@ public class Drivetrain {
     }
 
     public void setFieldWeightedDrivePower(Pose drivePower, double heading) {
-        Vector fieldFrame = new Vector(drivePower.getX(), drivePower.getY()).rotate(heading);
+        Vector2D fieldFrame = new Vector2D(drivePower.getX(), drivePower.getY()).rotate(heading);
         Pose vel = new Pose(fieldFrame.getX(), fieldFrame.getY(), drivePower.heading);
 
         if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading) > 1) {

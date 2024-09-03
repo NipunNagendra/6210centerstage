@@ -9,7 +9,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 @Config
 public class PurePursuitCommand {

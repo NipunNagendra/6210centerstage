@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
+import org.firstinspires.ftc.teamcode.util.geometry.Point;
 
 
 public class PurePursuitUtil {

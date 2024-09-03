@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.drivepp.tests;
 
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.xD;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.xP;
 import static org.firstinspires.ftc.teamcode.drivepp.tests.HeadingPIDTest.hD;
 import static org.firstinspires.ftc.teamcode.drivepp.tests.HeadingPIDTest.hI;
 import static org.firstinspires.ftc.teamcode.drivepp.tests.HeadingPIDTest.hP;
@@ -12,17 +10,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
-import org.firstinspires.ftc.teamcode.drivepp.util.CustomBasicPID;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 @Config
 @Autonomous

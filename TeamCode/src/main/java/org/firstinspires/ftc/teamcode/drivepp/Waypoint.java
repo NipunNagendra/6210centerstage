@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
 
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.geometry.Point;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 import java.util.Locale;
 

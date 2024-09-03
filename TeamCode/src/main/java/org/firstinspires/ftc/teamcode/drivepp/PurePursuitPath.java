@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.drivepp;
 
 
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Vector2D;
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Point;
-import org.firstinspires.ftc.teamcode.drivepp.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.geometry.Point;
+import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 import java.util.Collections;
 import java.util.LinkedList;
