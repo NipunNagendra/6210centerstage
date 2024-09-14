@@ -9,12 +9,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 @Config
 public class PurePursuitCommand {
     private final Drivetrain drivetrain;
-    private final TwoWheelIMULocalizer localizer;
+    private final TwoWheelIMULocalizerLegacy localizer;
     private final PurePursuitPath purePursuitPath;
     private final Pose endPose;
 
@@ -32,7 +34,7 @@ public class PurePursuitCommand {
 
     public PurePursuitCommand(PurePursuitPath purePursuitPath, HardwareMap hardwareMap) {
         this.drivetrain = new Drivetrain(hardwareMap);
-        this.localizer = new TwoWheelIMULocalizer(hardwareMap);
+        this.localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(0,0,0);
         this.purePursuitPath = purePursuitPath;
         this.endPose = purePursuitPath.getEndPose();

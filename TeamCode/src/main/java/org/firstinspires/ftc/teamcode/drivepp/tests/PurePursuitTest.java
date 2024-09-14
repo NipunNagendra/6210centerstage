@@ -8,7 +8,6 @@ import static java.lang.Thread.sleep;
 
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,8 +19,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants;
 import org.firstinspires.ftc.teamcode.drivepp.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
+import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.drivepp.Waypoint;
+import org.firstinspires.ftc.teamcode.util.TelemetryDrawer;
 import org.firstinspires.ftc.teamcode.util.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
@@ -30,10 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Config
+
 @Autonomous
 public class PurePursuitTest extends OpMode {
     private Drivetrain drivetrain;
-    private TwoWheelIMULocalizer localizer;
+    private TwoWheelIMULocalizerLegacy localizer;
     private PurePursuitPath purePursuitPath;
     private FtcDashboard dashboard;
     private Pose endPose;
@@ -54,12 +55,9 @@ public class PurePursuitTest extends OpMode {
 
     public static double lookaheadDistance = 15;
 
-
-
     public void init() {
-
         drivetrain = new Drivetrain(hardwareMap);
-        localizer = new TwoWheelIMULocalizer(hardwareMap);
+        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(-45.5,-39.5,Math.PI);
         purePursuitPath = new PurePursuitPath(
                 new Waypoint(new Point(-45.5,-39.5), lookaheadDistance),
@@ -70,26 +68,22 @@ public class PurePursuitTest extends OpMode {
         endPose = purePursuitPath.getEndPose();
 
         dashboard = FtcDashboard.getInstance();
-
-        TelemetryPacket packet = new TelemetryPacket();
-        Canvas fieldOverlay = packet.fieldOverlay();
-        fieldOverlay.setStroke("#0000FF");
-        fieldOverlay.strokeCircle(endPose.x, endPose.y, 9); // 9 is the radius of the robot, adjust as needed
-        fieldOverlay.strokeLine(endPose.x, endPose.y, endPose.x + Math.cos(endPose.heading) * 9, endPose.y + Math.sin(endPose.heading) * 9);
-
-        for (Waypoint waypoint : purePursuitPath.getWaypoints()) {
-            fieldOverlay.strokeCircle(waypoint.getPoint().x, waypoint.getPoint().y, 2);
-        }
-        dashboard.sendTelemetryPacket(packet);
-
         robotPath = new ArrayList<>();
         targetPath = new ArrayList<>();
+
+        TelemetryPacket packet = new TelemetryPacket();
+        TelemetryDrawer drawer = new TelemetryDrawer(packet);
+
+        drawer.drawPose(endPose, "#0000FF", 9);
+        drawer.drawWaypoints(purePursuitPath, "#0000FF", 2);
+        dashboard.sendTelemetryPacket(packet);
     }
 
-    public void loop(){
+    public void loop() {
         localizer.update();
         execute();
         telemetry.update();
+
         Pose robotPose2 = localizer.getPose();
         robotPath.add(new Point(robotPose2.x, robotPose2.y));
     }
@@ -114,9 +108,6 @@ public class PurePursuitTest extends OpMode {
         double currentHeading = robotPose.heading;
         double error = AngleUnit.normalizeRadians(targetPose.heading - currentHeading);
         double hPower = hController.calculate(0, -error);
-//        if((Math.abs(error) <= 0.017453)){
-//            hPower=0;
-//        }
 
         double currentY = robotPose.y;
         double yPower = yController.calculate(targetPose.y, currentY);
@@ -124,51 +115,27 @@ public class PurePursuitTest extends OpMode {
         double x_rotated = xPower * Math.cos(-robotPose.heading) - yPower * Math.sin(-robotPose.heading);
         double y_rotated = xPower * Math.sin(-robotPose.heading) + yPower * Math.cos(-robotPose.heading);
 
-
         hPower = Range.clip(hPower, -MAX_ROTATIONAL_SPEED, MAX_ROTATIONAL_SPEED);
         x_rotated = Range.clip(x_rotated, -MAX_TRANSLATIONAL_SPEED / X_GAIN, MAX_TRANSLATIONAL_SPEED / X_GAIN);
         y_rotated = Range.clip(y_rotated, -MAX_TRANSLATIONAL_SPEED, MAX_TRANSLATIONAL_SPEED);
 
         TelemetryPacket packet = new TelemetryPacket();
-        Canvas fieldOverlay = packet.fieldOverlay();
+        TelemetryDrawer drawer = new TelemetryDrawer(packet);
 
-        fieldOverlay.setStroke("#FF0000");
-        fieldOverlay.strokeCircle(targetPose.x, targetPose.y, 9); // 9 is the radius of the robot, adjust as needed
-        fieldOverlay.strokeLine(targetPose.x, targetPose.y, targetPose.x + Math.cos(targetPose.heading) * 9, targetPose.y + Math.sin(targetPose.heading) * 9);
-        for (int i = 0; i < targetPath.size() - 1; i++) {
-            Point p1 = targetPath.get(i);
-            Point p2 = targetPath.get(i + 1);
-            fieldOverlay.strokeLine(p1.x, p1.y, p2.x, p2.y);
-        }
-
-        fieldOverlay.setStroke("#00FF00");
-        fieldOverlay.strokeCircle(robotPose.x, robotPose.y, 9); // 9 is the radius of the robot, adjust as needed
-        fieldOverlay.strokeLine(robotPose.x, robotPose.y, robotPose.x + Math.cos(robotPose.heading) * 9, robotPose.y + Math.sin(robotPose.heading) * 9);
-        for (int i = 0; i < robotPath.size() - 1; i++) {
-            Point p1 = robotPath.get(i);
-            Point p2 = robotPath.get(i + 1);
-            fieldOverlay.strokeLine(p1.x, p1.y, p2.x, p2.y);
-        }
-
-        fieldOverlay.setStroke("#0000FF");
-        fieldOverlay.strokeCircle(endPose.x, endPose.y, 9); // 9 is the radius of the robot, adjust as needed
-        fieldOverlay.strokeLine(endPose.x, endPose.y, endPose.x + Math.cos(endPose.heading) * 9, endPose.y + Math.sin(endPose.heading) * 9);
-
-        for (Waypoint waypoint : purePursuitPath.getWaypoints()) {
-            fieldOverlay.strokeCircle(waypoint.getPoint().x, waypoint.getPoint().y, 2);
-        }
-
+        drawer.drawPose(targetPose, "#FF0000", 9);
+        drawer.drawPath(targetPath, "#FF0000");
+        drawer.drawPose(robotPose, "#00FF00", 9);
+        drawer.drawPath(robotPath, "#00FF00");
+        drawer.drawPose(endPose, "#0000FF", 9);
+        drawer.drawWaypoints(purePursuitPath, "#0000FF", 2);
 
         packet.put("target Heading", targetPose.heading);
         packet.put("current Heading", currentHeading);
         packet.put("heading power", hPower);
         dashboard.sendTelemetryPacket(packet);
 
-//        drivetrain.setFieldWeightedDrivePower(new Pose(x_rotated, y_rotated, hPower).scale(Math.min(accelLimit.seconds() / ACCEL_LIMIT, 1)), 0);
         drivetrain.setFieldWeightedDrivePower(new Pose(x_rotated, y_rotated, hPower), 0);
-
     }
-
 
     public boolean isFinished() {
         return PID && finished || (timer != null && timer.milliseconds() > 2000);
@@ -177,6 +144,4 @@ public class PurePursuitTest extends OpMode {
     public void end(boolean interrupted) {
         drivetrain.setFieldWeightedDrivePower(new Pose(), 0);
     }
-
-
 }

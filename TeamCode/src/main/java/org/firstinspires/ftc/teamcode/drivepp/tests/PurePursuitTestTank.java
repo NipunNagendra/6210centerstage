@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivepp.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
+import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.drivepp.Waypoint;
 import org.firstinspires.ftc.teamcode.util.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
@@ -29,7 +29,7 @@ import java.util.List;
 @Autonomous
 public class PurePursuitTestTank extends OpMode {
     private Drivetrain drivetrain;
-    private TwoWheelIMULocalizer localizer;
+    private TwoWheelIMULocalizerLegacy localizer;
     private PurePursuitPath purePursuitPath;
     private FtcDashboard dashboard;
     private Pose endPose;
@@ -55,7 +55,7 @@ public class PurePursuitTestTank extends OpMode {
 
     public void init() {
         drivetrain = new Drivetrain(hardwareMap);
-        localizer = new TwoWheelIMULocalizer(hardwareMap);
+        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(-45.5, -39.5, Math.PI);
         purePursuitPath = new PurePursuitPath(
                 new Waypoint(new Point(-45.5, -39.5), lookaheadDistance),

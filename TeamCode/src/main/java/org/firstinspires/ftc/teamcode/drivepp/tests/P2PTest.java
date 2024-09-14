@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
+import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 @Autonomous
 public class P2PTest extends OpMode {
     Drivetrain drivetrain;
-    TwoWheelIMULocalizer localizer;
+    TwoWheelIMULocalizerLegacy localizer;
     private FtcDashboard dashboard;
 
     public static double targetX= 20;
@@ -61,7 +61,7 @@ public class P2PTest extends OpMode {
 
     public void init() {
         drivetrain = new Drivetrain(hardwareMap);
-        localizer = new TwoWheelIMULocalizer(hardwareMap);
+        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         dashboard = FtcDashboard.getInstance();
 
         TelemetryPacket packet = new TelemetryPacket();

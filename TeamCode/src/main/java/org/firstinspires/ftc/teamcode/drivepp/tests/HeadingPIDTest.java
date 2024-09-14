@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.drivepp.TwoWheelIMULocalizer;
+import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 public class HeadingPIDTest extends OpMode {
 
     private Drivetrain drivetrain;
-    private TwoWheelIMULocalizer localizer;
+    private TwoWheelIMULocalizerLegacy localizer;
     private ElapsedTime runtime;
     private FtcDashboard dashboard;
 
@@ -34,7 +34,7 @@ public class HeadingPIDTest extends OpMode {
     @Override
     public void init() {
         headingController = new CustomBasicPID(new PIDCoefficients(hP, hI, hD));
-        localizer = new TwoWheelIMULocalizer(hardwareMap);
+        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(0,0,0);
         dashboard = FtcDashboard.getInstance();
         drivetrain = new Drivetrain(hardwareMap);

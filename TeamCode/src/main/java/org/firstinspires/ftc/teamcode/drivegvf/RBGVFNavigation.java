@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drivegvf;
 
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
 
 import java.util.List;
@@ -9,7 +11,7 @@ public class RBGVFNavigation {
     // Scaling factor based on new dimensions
     private final double SCALE_FACTOR = 0.093; // Example scaling factor
 
-    public Vector2D calculateGuidanceVector(CubicBezierCurve curve, Vector2D currentLocation, List<Vector2D> resistingObjects) {
+    public Vector2D calculateGuidanceVector(CubicBezierCurve curve, Vector2D currentLocation, List<Vector2D> resistingObjects, Vector2D robotVelocity) {
         long startTime = System.nanoTime();
         double closestT = findClosestPoint(curve, currentLocation);
         Vector2D closestPoint = curve.calculate(closestT);
@@ -22,6 +24,8 @@ public class RBGVFNavigation {
 
         Vector2D driveVector = curve.derivative(closestT);
         Vector2D correctionVector = closestPoint.subtract(currentLocation);
+        Vector2D centripetalVector = centripetalCorrectiveVector(curve, closestT, robotVelocity, driveVector);
+        correctionVector.add(centripetalVector);
         double CORRECTION_DISTANCE = 80 * SCALE_FACTOR; // Scaled down
         Vector2D endPoint = curve.calculate(1);
         double SAVING_THROW_DISTANCE = 100 * SCALE_FACTOR; // Scaled down
@@ -84,7 +88,7 @@ public class RBGVFNavigation {
                 }
             }
         }
-        Vector2D centripetalVector = centripetalCorrectiveVector(curve, currentLocation);
+//        movementVector = movementVector.add(centripetalVector);
         return movementVector;
     }
 
@@ -138,17 +142,20 @@ public class RBGVFNavigation {
         return curve.calculate(t).subtract(point).getMagSq();
     }
 
-    public Vector2D centripetalCorrectiveVector(CubicBezierCurve curve, Vector2D currentLocation) {
-        double closestT = findClosestPoint(curve, currentLocation);
-        double xprime = curve.derivative(closestT).getX();
-        double yprime = curve.derivative(closestT).getY();
-        double xprimeprime = curve.secondDerivative(closestT).getX();
-        double yprimeprime = curve.secondDerivative(closestT).getY();
+    public Vector2D centripetalCorrectiveVector(CubicBezierCurve curve, double closestT, Vector2D velocity, Vector2D driveVector) {
 
-        double k = (xprime * yprimeprime - yprime * xprimeprime) / Math.pow(xprime * xprime + yprime * yprime, 1.5);
-        double r = 1 / k;
+        double curvature = curve.getCurvature(closestT);
 
-        // Vector mv^2/r
-        return new Vector2D(-yprime, xprime).scalarMultiply(Math.pow(xprime * xprime + yprime * yprime, 0.5) * Math.pow(1 / r, 2));
+        if (Double.isNaN(curvature)) return new Vector2D(0,0);
+        Vector2D centripetalVector = new Vector2D(Range.clip(0.0005 * 10 *
+                Math.pow(velocity.dot(driveVector.normalize()), 2)
+                * curvature, -1, 1), driveVector.getHeading() + Math.PI / 2 *
+                getSign(driveVector.getHeading()));
+        return centripetalVector;
+    }
+    public static double getSign(double get) {
+        if (get == 0) return 0;
+        if (get > 0) return 1;
+        return -1;
     }
 }

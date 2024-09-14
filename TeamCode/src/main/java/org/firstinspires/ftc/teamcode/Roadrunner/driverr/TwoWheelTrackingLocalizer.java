@@ -7,7 +7,7 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.util.rrutil.Encoder;
+import org.firstinspires.ftc.teamcode.util.rrutil.EncoderSensor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +50,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
-    private Encoder parallelEncoder, perpendicularEncoder;
+    private EncoderSensor parallelEncoder, perpendicularEncoder;
 
     private SampleMecanumDrive drive;
 
@@ -62,12 +62,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightClimber"));
+        parallelEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "intakeMotor"));
+        perpendicularEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "rightClimber"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
-        perpendicularEncoder.setDirection(Encoder.Direction.FORWARD);
-        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
+        perpendicularEncoder.setDirection(EncoderSensor.Direction.FORWARD);
+        parallelEncoder.setDirection(EncoderSensor.Direction.REVERSE);
 
     }
 

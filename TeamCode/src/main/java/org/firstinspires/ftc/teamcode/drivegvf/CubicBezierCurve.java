@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.drivegvf;
 
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
+
+import java.util.LinkedList;
 
 public class CubicBezierCurve {
 
@@ -75,5 +79,22 @@ public class CubicBezierCurve {
 
     public double heading(double t) {
         return derivative(t).getHeading();
+    }
+
+    public LinkedList<Vector2D> getControlPoints(){
+        LinkedList<Vector2D> controlPoints = new LinkedList<>();
+        controlPoints.add(p0);
+        controlPoints.add(p1);
+        controlPoints.add(p2);
+        controlPoints.add(p3);
+        return controlPoints;
+    }
+    public double getCurvature(double t) {
+        t = Range.clip(t, 0, 1);
+        Vector2D derivative = derivative(t);
+        Vector2D secondDerivative = secondDerivative(t);
+
+        if (derivative.getMagnitude() == 0) return 0;
+        return (derivative.cross(secondDerivative))/Math.pow(derivative.getMagnitude(),3);
     }
 }

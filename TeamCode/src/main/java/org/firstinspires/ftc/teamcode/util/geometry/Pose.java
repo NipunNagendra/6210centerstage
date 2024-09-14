@@ -32,6 +32,11 @@ public class Pose extends Point {
         this.y = ftcPose.x * Math.sin(heading) + ftcPose.y * Math.cos(heading);
     }
 
+    public Pose(double i, double i1) {
+        this(i, i1, 0);
+    }
+
+
     public void set(Pose other) {
         this.x = other.x;
         this.y = other.y;
@@ -65,5 +70,13 @@ public class Pose extends Point {
     @Override
     public String toString() {
         return String.format(Locale.ENGLISH, "%.2f %.2f %.3f", x, y, heading);
+    }
+
+    public double getHeading() {
+        return heading;
+    }
+
+    public Pose clone() {
+        return new Pose(x, y, heading);
     }
 }

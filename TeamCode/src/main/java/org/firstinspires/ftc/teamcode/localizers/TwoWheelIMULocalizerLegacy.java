@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drivepp;
+package org.firstinspires.ftc.teamcode.localizers;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,10 +10,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
 import org.firstinspires.ftc.teamcode.optimizations.RingBuffer;
-import org.firstinspires.ftc.teamcode.util.rrutil.Encoder;
+import org.firstinspires.ftc.teamcode.util.rrutil.EncoderSensor;
 
-public class TwoWheelIMULocalizer {
-    private Encoder parallelEncoder, perpendicularEncoder;
+public class TwoWheelIMULocalizerLegacy {
+    private EncoderSensor parallelEncoder, perpendicularEncoder;
     private IMU imu;
     private Pose pose = new Pose(0, 0, 0);
 
@@ -33,9 +33,9 @@ public class TwoWheelIMULocalizer {
 
     private RingBuffer poseHistory;
 
-    public TwoWheelIMULocalizer(HardwareMap hardwareMap) {
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "BR"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "FR"));
+    public TwoWheelIMULocalizerLegacy(HardwareMap hardwareMap) {
+        parallelEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "BR"));
+        perpendicularEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "FR"));
         parallelEncoder.resetEncoder();
         perpendicularEncoder.resetEncoder();
         imu = hardwareMap.get(IMU.class, "imu");
