@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.util;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
-import org.firstinspires.ftc.teamcode.drivegvf.CubicBezierCurve;
+import org.firstinspires.ftc.teamcode.backend.drivegvf.CubicBezierCurve;
 import org.firstinspires.ftc.teamcode.util.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
-import org.firstinspires.ftc.teamcode.drivepp.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.drivepp.Waypoint;
+import org.firstinspires.ftc.teamcode.backend.drivepp.PurePursuitPath;
+import org.firstinspires.ftc.teamcode.backend.drivepp.Waypoint;
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
 
 import java.util.LinkedList;

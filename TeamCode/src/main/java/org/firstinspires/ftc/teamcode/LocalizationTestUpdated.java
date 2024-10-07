@@ -1,26 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.MAX_ROTATIONAL_SPEED;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.MAX_TRANSLATIONAL_SPEED;
-import static org.firstinspires.ftc.teamcode.drivepp.PurePursuitConstants.X_GAIN;
-
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.drivegvf.CubicBezierCurve;
-import org.firstinspires.ftc.teamcode.drivegvf.RBGVFNavigation;
-import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.drivepp.tests.HeadingPIDTest;
-import org.firstinspires.ftc.teamcode.drivepp.tests.XPIDTest;
-import org.firstinspires.ftc.teamcode.drivepp.tests.YPIDTest;
-import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
-import org.firstinspires.ftc.teamcode.localizers.TwoWheelLocalizer;
+import org.firstinspires.ftc.teamcode.backend.drivegvf.CubicBezierCurve;
+import org.firstinspires.ftc.teamcode.backend.drivegvf.RBGVFNavigation;
+import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
+import org.firstinspires.ftc.teamcode.backend.drivepp.tests.HeadingPIDTest;
+import org.firstinspires.ftc.teamcode.backend.drivepp.tests.XPIDTest;
+import org.firstinspires.ftc.teamcode.backend.drivepp.tests.YPIDTest;
+import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelLocalizer;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 import org.firstinspires.ftc.teamcode.util.TelemetryDrawer;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;

@@ -7,8 +7,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.localizers.TwoWheelIMULocalizerLegacy;
+import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
+import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 @TeleOp(name = "Localization Test", group = "Test")
@@ -56,7 +56,7 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.update();
 
             drivetrain.setRobotWeightedDrivePower(new Pose(gamepad1.left_stick_y,
-                    gamepad1.left_stick_x, gamepad1.right_stick_x));
+                    gamepad1.left_stick_x, -gamepad1.right_stick_x));
 
             sleep(50); // Update at a reasonable rate
         }
