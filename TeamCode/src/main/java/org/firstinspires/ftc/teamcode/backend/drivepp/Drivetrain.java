@@ -31,7 +31,7 @@ public class Drivetrain {
         this.FL.setDirection(DcMotorSimple.Direction.FORWARD);
         this.BL.setDirection(DcMotorSimple.Direction.FORWARD);
         this.BR.setDirection(DcMotorSimple.Direction.FORWARD);
-        this.FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.FR.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void setPower(double power) {

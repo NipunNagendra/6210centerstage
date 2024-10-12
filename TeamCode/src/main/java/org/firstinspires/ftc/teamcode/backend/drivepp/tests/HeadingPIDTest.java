@@ -25,9 +25,9 @@ public class HeadingPIDTest extends OpMode {
     private FtcDashboard dashboard;
 
 
-    public static double hP = 0.4;
+    public static double hP = 0;
     public static double hI = 0;
-    public static double hD = 0.3;
+    public static double hD = 0;
     public static double targetHeading = 0.0;
     public static CustomBasicPID headingController;
 
@@ -49,10 +49,11 @@ public class HeadingPIDTest extends OpMode {
         Pose robotPose = localizer.getPose();
         headingController.setCoefficients(new PIDCoefficients(hP, hI,hD));
         // Update the PID controller with the current position and target
-        double currentHeading = robotPose.heading;
+        double currentHeading = AngleUnit.normalizeRadians(robotPose.heading);
         double error = AngleUnit.normalizeRadians(targetHeading - currentHeading);
-        double headingPower = headingController.calculate(0, error);
-//        if(!(Math.abs(error) <= 0.017453)){
+        double headingPower = headingController.calculate(0, -error);
+//        if((Math.abs(error) <= 0.017453)){
+//            headingPower=0;
 //        }
         drivetrain.setRobotWeightedDrivePower(new Pose(0, 0, headingPower));
 

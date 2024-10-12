@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
@@ -17,6 +18,8 @@ public class LocalizationTest extends LinearOpMode {
     private TwoWheelIMULocalizerLegacy localizer;
     private FtcDashboard dashboard;
     private Drivetrain drivetrain;
+    ElapsedTime loopTime = new ElapsedTime();
+    double multiplier = 1;
 
     @Override
     public void runOpMode() {
@@ -53,12 +56,20 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("heading", pose.heading);
             telemetry.addData("joyy", gamepad1.left_stick_y);
             telemetry.addData("joyx", gamepad1.left_stick_x);
+            telemetry.addData("looptime", loopTime.milliseconds());
             telemetry.update();
 
-            drivetrain.setRobotWeightedDrivePower(new Pose(gamepad1.left_stick_y,
-                    gamepad1.left_stick_x, -gamepad1.right_stick_x));
+            if(gamepad1.right_bumper){
+                multiplier=0.5;
+            }
+            else{
+                multiplier=1;
+            }
+            drivetrain.setRobotWeightedDrivePower(new Pose(gamepad1.left_stick_y*multiplier,
+                    gamepad1.left_stick_x*multiplier, -gamepad1.right_stick_x*multiplier));
 
-            sleep(50); // Update at a reasonable rate
+            loopTime.reset();
+
         }
     }
 }
