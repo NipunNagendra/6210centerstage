@@ -25,9 +25,9 @@ public class HeadingPIDTest extends OpMode {
     private FtcDashboard dashboard;
 
 
-    public static double hP = 0;
+    public static double hP = 0.5;
     public static double hI = 0;
-    public static double hD = 0;
+    public static double hD = 100;
     public static double targetHeading = 0.0;
     public static CustomBasicPID headingController;
 

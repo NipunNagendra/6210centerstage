@@ -29,7 +29,7 @@ public class Drivetrain {
         this.BR = hardwareMap.get(DcMotor.class, "BR");
 
         this.FL.setDirection(DcMotorSimple.Direction.FORWARD);
-        this.BL.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.BL.setDirection(DcMotorSimple.Direction.REVERSE);
         this.BR.setDirection(DcMotorSimple.Direction.FORWARD);
         this.FR.setDirection(DcMotorSimple.Direction.FORWARD);
     }

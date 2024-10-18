@@ -34,8 +34,8 @@ public class TwoWheelIMULocalizerLegacy {
     private RingBuffer poseHistory;
 
     public TwoWheelIMULocalizerLegacy(HardwareMap hardwareMap) {
-        parallelEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "FL"));
-        perpendicularEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "BR"));
+        parallelEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "BL"));
+        perpendicularEncoder = new EncoderSensor(hardwareMap.get(DcMotorEx.class, "FR"));
         parallelEncoder.setDirection(EncoderSensor.Direction.REVERSE);
         perpendicularEncoder.setDirection(EncoderSensor.Direction.REVERSE);
         parallelEncoder.resetEncoder();

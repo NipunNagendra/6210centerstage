@@ -63,9 +63,9 @@ public class XPIDTest extends OpMode {
         // Update the PID controller with the current position and target
         double currentHeading = robotPose.heading;
         double error = AngleUnit.normalizeRadians(0 - currentHeading);
-        double headingPower = headingController.calculate(0, error);
+        double headingPower = headingController.calculate(0, -error);
 
-        drivetrain.setRobotWeightedDrivePower(new Pose(xPower, 0, headingPower));
+        drivetrain.setRobotWeightedDrivePower(new Pose(-xPower, 0, headingPower));
 
         // Send telemetry data to the dashboard
         packet.put("Current X", currentX);
