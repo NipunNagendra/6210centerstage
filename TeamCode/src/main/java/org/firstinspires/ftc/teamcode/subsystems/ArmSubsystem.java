@@ -20,18 +20,18 @@ public class ArmSubsystem extends SubsystemBase {
 
     private double armStart;
     private double armTarget;
-    private static final double ARM_F = -0.2;
+    private static final double ARM_F = 0.3;
     private static final double TICK_PER_RAD = ((((1 + (46.0 / 11.0))) * (1 + (46.0 / 11.0))) * 28) / (2 * Math.PI) / 0.333;
     private static final double ARM_MIN = 0;
     private static final double ARM_MAX = 1.9;
     private static double power = 0;
-    CustomPIDFCoefficients pid = new CustomPIDFCoefficients(0, 0, 0, ARM_F);
+    CustomPIDFCoefficients pid = new CustomPIDFCoefficients(4, 0, 0, ARM_F);
 
     private PIDFController armPID;
 
     public ArmSubsystem(HardwareMap hardwareMap) {
         this.armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
-        this.armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//        this.armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         this.armMotor.setDirection(DcMotorEx.Direction.REVERSE);
         this.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -49,7 +49,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double armAngle() {
-        return (-armMotor.getCurrentPosition()) / TICK_PER_RAD;
+        return ((-armMotor.getCurrentPosition()) / TICK_PER_RAD)- Math.toRadians(28);
     }
 
     public void setRawArmPower(double power) {
@@ -61,22 +61,32 @@ public class ArmSubsystem extends SubsystemBase {
 
 
     public void moveArmTo(double targetAngle) {
-        power=Math.cos((armAngle()))*(2*(getExtendoPosition()/2987));
-        armPID.updateFeedForwardInput(Math.cos((armAngle()))*(2*(getExtendoPosition()/2987)));
+//        double minFeedforward = Math.cos(armAngle()) * 0.1 / ARM_F;
+//        double maxFeedforward = Math.cos(armAngle()) * (2 + (getExtendoPosition() / 2800)) * -0.4;
+//
+//        double normalizedPosition = getExtendoPosition() / 2800.0;
+//        double scaledPosition = Math.pow(normalizedPosition, 3);
+//
+//        // Only apply feedforward if extendo position is above a threshold (to avoid excess power)
+//        if (normalizedPosition > 0.1) {  // Change threshold as needed
+//            double interpolatedFeedforward = minFeedforward + scaledPosition * (maxFeedforward - minFeedforward);
+//            power = interpolatedFeedforward;
+//        } else {
+//            power = 0;  // No power if position is too small
+//        }
+
+        armPID.updateFeedForwardInput(Math.cos(armAngle())*(1+Math.pow((getExtendoPosition()/2800),2)));
         armPID.setTargetPosition(targetAngle);
         armPID.updatePosition(armAngle());
-        armMotor.setPower(armPID.runPIDF());
+        armMotor.setPower(-armPID.runPIDF());
     }
 
     public void manualControl(double stickInput) {
-        armTarget -= stickInput * 0.2; // Adjust the speed multiplier here
-//        if (armTarget < ARM_MIN) {
-//            armTarget = ARM_MIN;
-//        } else if (armTarget > ARM_MAX) {
-//            armTarget = ARM_MAX;
-//        }
-        moveArmTo(armTarget);
+            armTarget = armAngle() - (stickInput * 0.1);  // Adjust the speed multiplier here
+            moveArmTo(armTarget);
+
     }
+
 
     public double getArmPosition() {
         return armMotor.getCurrentPosition();
@@ -87,6 +97,8 @@ public class ArmSubsystem extends SubsystemBase {
     public double getExtendoPower() {
         return power;
     }
-
+    public double getArmTarget(){
+        return armPID.getTargetPosition();
+    }
 
 }

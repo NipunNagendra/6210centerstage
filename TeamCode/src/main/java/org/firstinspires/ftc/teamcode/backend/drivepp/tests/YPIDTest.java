@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
+import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
@@ -25,30 +26,30 @@ public class YPIDTest extends OpMode {
     private FtcDashboard dashboard;
 
 
-    public static double yP = 0.06;
+    public static double yP = 0.05;
     public static double yI = 0;
-    public static double yD = 0.06;
+    public static double yD = 3;
     public static double targetY = 0.0;
     public static double targetX = 0.0;
     public static double targetHeading = 0.0;
 
 
 
-    public static CustomBasicPID xController;
+    public static CustomBasicSQUID xController;
 
-    public static CustomBasicPID headingController;
-    public static CustomBasicPID yController;
+    public static CustomBasicSQUID headingController;
+    public static CustomBasicSQUID yController;
 
 
     @Override
     public void init() {
-        xController = new CustomBasicPID(new PIDCoefficients(XPIDTest.xP, XPIDTest.xI, XPIDTest.xD));
+        xController = new CustomBasicSQUID(new PIDCoefficients(XPIDTest.xP, XPIDTest.xI, XPIDTest.xD));
         localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(0,0,0);
         dashboard = FtcDashboard.getInstance();
         drivetrain = new Drivetrain(hardwareMap);
-        headingController = new CustomBasicPID(new PIDCoefficients(HeadingPIDTest.hP, HeadingPIDTest.hI, HeadingPIDTest.hD));
-        yController = new CustomBasicPID(new PIDCoefficients(yP, yI, yD));
+        headingController = new CustomBasicSQUID(new PIDCoefficients(HeadingPIDTest.hP, HeadingPIDTest.hI, HeadingPIDTest.hD));
+        yController = new CustomBasicSQUID(new PIDCoefficients(yP, yI, yD));
 
     }
 
@@ -61,25 +62,25 @@ public class YPIDTest extends OpMode {
 
         double currentX = robotPose.x;
         double xPower = xController.calculate(targetX, currentX);
-        if((Math.abs(0 -currentX) <= 0.08)){
-            xPower=0;
-        }
+//        if((Math.abs(0 -currentX) <= 0.08)){
+//            xPower=0;
+//        }
 
         double currentHeading = robotPose.heading;
         double error = AngleUnit.normalizeRadians(targetHeading - currentHeading);
-        double headingPower = headingController.calculate(0, error);
-        if((Math.abs(error) <= 0.017453)){
-            headingPower=0;
-        }
+        double headingPower = headingController.calculate(0, -error);
+//        if((Math.abs(error) <= 0.017453)){
+//            headingPower=0;
+//        }
 
         yController.setCoefficients(new PIDCoefficients(yP, yI,yD));
         double currentY = robotPose.y;
         double yPower = yController.calculate(targetY, currentY);
-        if((Math.abs(targetY-robotPose.y) <= 0.09)){
-            yPower=0;
-        }
+//        if((Math.abs(targetY-robotPose.y) <= 0.09)){
+//            yPower=0;
+//        }
         // Drive the robot
-        drivetrain.setRobotWeightedDrivePower(new Pose(xPower, yPower, headingPower));
+        drivetrain.setRobotWeightedDrivePower(new Pose(-xPower, -yPower, headingPower));
 
         // Send telemetry data to the dashboard
         packet.put("Current Y", currentY);

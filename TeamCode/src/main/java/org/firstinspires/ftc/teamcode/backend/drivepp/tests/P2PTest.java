@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
+import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
@@ -42,9 +43,9 @@ public class P2PTest extends OpMode {
     public Pose targetPose = new Pose(targetX, targetY, targetH);
     public Pose robotPose2 = new Pose(0, 0, 0);
 
-    public static CustomBasicPID xController = new CustomBasicPID(new PIDCoefficients(xP, xI, xD));
-    public static CustomBasicPID yController = new CustomBasicPID(new PIDCoefficients(yP, yI, yD));
-    public static CustomBasicPID hController = new CustomBasicPID(new PIDCoefficients(hP, hI, hD));
+    public static CustomBasicSQUID xController = new CustomBasicSQUID(new PIDCoefficients(xP, xI, xD));
+    public static CustomBasicSQUID yController = new CustomBasicSQUID(new PIDCoefficients(yP, yI, yD));
+    public static CustomBasicSQUID hController = new CustomBasicSQUID(new PIDCoefficients(hP, hI, hD));
 
     public static double ALLOWED_TRANSLATIONAL_ERROR = 1;
     public static double ALLOWED_HEADING_ERROR = 0.02;
@@ -107,20 +108,20 @@ public class P2PTest extends OpMode {
 
     public Pose getPower(Pose robotPose) {
         double currentX = robotPose.x;
-        double xPower = xController.calculate(targetPose.x, currentX);
+        double xPower = -xController.calculate(targetPose.x, currentX);
         if((Math.abs(targetPose.x - currentX) <= 0.08)){
             xPower=0;
         }
 
         double currentHeading = robotPose.heading;
         double error = AngleUnit.normalizeRadians(targetPose.heading - currentHeading);
-        double hPower = hController.calculate(0, error);
+        double hPower = hController.calculate(0, -error);
         if((Math.abs(error) <= 0.017453)){
             hPower=0;
         }
 
         double currentY = robotPose.y;
-        double yPower = yController.calculate(targetPose.y, currentY);
+        double yPower = -yController.calculate(targetPose.y, currentY);
         if((Math.abs(targetPose.y-robotPose.y) <= 0.09)){
             yPower=0;
         }

@@ -7,17 +7,19 @@ import java.util.function.DoubleSupplier;
 public class ManualArmControlCommand extends CommandBase {
     private final ArmSubsystem armSubsystem;
     private final DoubleSupplier stickInput;
+    private final DoubleSupplier stickInputx;
 
-    public ManualArmControlCommand(ArmSubsystem armSubsystem, DoubleSupplier stickInput) {
+    public ManualArmControlCommand(ArmSubsystem armSubsystem, DoubleSupplier stickInput, DoubleSupplier stickInputx) {
         this.armSubsystem = armSubsystem;
         this.stickInput = stickInput;
+        this.stickInputx = stickInputx;
         addRequirements(armSubsystem);
     }
 
     @Override
     public void execute() {
         armSubsystem.manualControl(stickInput.getAsDouble());
-
+        armSubsystem.setRawExtendoPower(stickInputx.getAsDouble());
     }
 
 

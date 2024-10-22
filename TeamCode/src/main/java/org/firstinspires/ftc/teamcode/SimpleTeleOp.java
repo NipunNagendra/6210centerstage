@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.commands.ArmPosCommand;
 import org.firstinspires.ftc.teamcode.commands.ArmPresetCommand;
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.ManualArmControlCommand;
+import org.firstinspires.ftc.teamcode.commands.ManualExtendoControlCommand;
 import org.firstinspires.ftc.teamcode.commands.WristCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
@@ -90,18 +92,23 @@ public class SimpleTeleOp extends CommandOpMode {
                 .whileHeld(new IntakeCommand(intake, -1))
                 .whenReleased(new IntakeCommand(intake, 0));
 
+//        CommandScheduler.getInstance().schedule(
+//            new ManualArmControlCommand(arm, () -> gamepad2.left_stick_y);
+////            new ManualExtendoControlCommand(arm, () -> gamepad2.right_stick_y)));
+//            );
+
+
+
+
+//        CommandScheduler.getInstance().schedule(
+//                new ManualExtendoControlCommand(arm, () -> (gamepad2.right_trigger-gamepad2.left_trigger)));
+
         CommandScheduler.getInstance().schedule(
-                new ManualArmControlCommand(arm, () -> -gamepad2.left_stick_y));
+            new ManualArmControlCommand(arm, () -> (gamepad2.right_stick_y), () -> (gamepad2.right_trigger-gamepad2.left_trigger)));
 
-//        gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-//                .whileHeld(new ManualArmControlCommand(arm, () -> -gamepad2.left_stick_y)
-//                );
-        CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
-            new ManualArmControlCommand(arm, () -> -gamepad2.left_stick_y).schedule();
-        }));
 
-//        gamepadEx2.getGamepadButton(GamepadKeys.Button.A).whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
-//            new ArmPresetCommand(arm, -3).schedule();
+//        gamepadEx2.getGamepadButton(GamepadKeys.Button.A).whenPressed(() -> CommandScheduler.getInstance().schedule(new RunCommand(() -> {
+//            new ArmPresetCommand(arm, 0).schedule();
 //        })));
     }
 
@@ -114,7 +121,7 @@ public class SimpleTeleOp extends CommandOpMode {
         telemetry.addData("ms", (loop - loopTime) / 1000000);
         telemetry.addData("kg", gamepadEx2.getRightY());
         telemetry.addData("angle", Math.toDegrees(arm.armAngle()));
-        telemetry.addData("pos", arm.getArmPosition());
+        telemetry.addData("pos", arm.getExtendoPosition());
         telemetry.addData("posex", arm.getExtendoPower());
 
 //        telemetry.addLine(arm.getCurrentCommand().toString());
@@ -122,7 +129,9 @@ public class SimpleTeleOp extends CommandOpMode {
         // Drive the robot
 
         // Send telemetry data to the dashboard
-        packet.put("power", arm.getExtendoPower());
+        packet.put("current", arm.armAngle());
+        packet.put("target", arm.getArmTarget());
+
 
         loopTime = loop;
         telemetry.update();

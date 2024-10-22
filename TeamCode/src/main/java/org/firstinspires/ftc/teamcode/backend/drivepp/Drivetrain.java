@@ -14,8 +14,8 @@ public class Drivetrain {
     DcMotor BL;
     DcMotor BR;
     public static double lateralMultiplier = 1.0;
-    public static double trackWidth = 1.0;
-    public static double wheelBase = 1.0;
+    public static double trackWidth = 1;
+    public static double wheelBase = 1;
     public static double VX_WEIGHT = 1.0;
     public static double VY_WEIGHT = 1.0;
     public static double OMEGA_WEIGHT = 1.0;
@@ -28,7 +28,7 @@ public class Drivetrain {
         this.BL = hardwareMap.get(DcMotor.class, "BL");
         this.BR = hardwareMap.get(DcMotor.class, "BR");
 
-        this.FL.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.FL.setDirection(DcMotorSimple.Direction.REVERSE);
         this.BL.setDirection(DcMotorSimple.Direction.REVERSE);
         this.BR.setDirection(DcMotorSimple.Direction.FORWARD);
         this.FR.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -51,10 +51,19 @@ public class Drivetrain {
     public void setRobotWeightedDrivePower(Pose drivePower) {
         Pose vel = drivePower;
 
-        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.heading);
-        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.heading);
-        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.heading);
-        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.heading);
+        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading) > 1) {
+            double denom = VX_WEIGHT * Math.abs(drivePower.getX()) + VY_WEIGHT * Math.abs(drivePower.getY()) + OMEGA_WEIGHT * Math.abs(drivePower.heading);
+            vel = new Pose(
+                    VX_WEIGHT * drivePower.getX(),
+                    VY_WEIGHT * drivePower.getY(),
+                    OMEGA_WEIGHT * drivePower.heading).scale(1/denom);
+        }
+
+
+        FL.setPower(vel.getX() - lateralMultiplier * vel.getY() - d * vel.heading);
+        FR.setPower(vel.getX() + lateralMultiplier * vel.getY() + d * vel.heading);
+        BL.setPower(vel.getX() + lateralMultiplier * vel.getY() - d * vel.heading);
+        BR.setPower(vel.getX() - lateralMultiplier * vel.getY() + d * vel.heading);
     }
 
     public void setFieldWeightedDrivePower(Pose drivePower, double heading) {

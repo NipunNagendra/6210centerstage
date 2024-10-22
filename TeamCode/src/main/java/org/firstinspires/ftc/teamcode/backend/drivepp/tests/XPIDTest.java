@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
+import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
@@ -29,22 +30,22 @@ public class XPIDTest extends OpMode {
     private FtcDashboard dashboard;
 
 
-    public static double xP = 0.04;
+    public static double xP = 0.02;
     public static double xI = 0;
-    public static double xD = 0.03;
+    public static double xD = 8;
     public static double targetX = 0.0;
-    public static CustomBasicPID xController;
+    public static CustomBasicSQUID xController;
 
-    public static CustomBasicPID headingController;
+    public static CustomBasicSQUID headingController;
 
     @Override
     public void init() {
-        xController = new CustomBasicPID(new PIDCoefficients(xP, xI, xD));
+        xController = new CustomBasicSQUID(new PIDCoefficients(xP, xI, xD));
         localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(0,0,0);
         dashboard = FtcDashboard.getInstance();
         drivetrain = new Drivetrain(hardwareMap);
-        headingController = new CustomBasicPID(new PIDCoefficients(hP, hI, hD));
+        headingController = new CustomBasicSQUID(new PIDCoefficients(hP, hI, hD));
 
     }
 

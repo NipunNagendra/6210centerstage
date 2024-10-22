@@ -51,8 +51,8 @@ public class CustomPIDFCoefficients {
      *              equation, then any input can be used.
      * @return This returns the coefficient for the feedforward factor.
      */
-    public double getCoefficient(double input) {
-        if (!usingEquation) return F;
-        return feedForwardConstantEquation.getConstant(input);
+    public double getCoefficient() {
+        return F;
+//        return feedForwardConstantEquation.getConstant(input);
     }
 }

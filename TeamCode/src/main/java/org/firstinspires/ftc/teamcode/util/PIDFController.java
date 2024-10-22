@@ -197,7 +197,7 @@ public class PIDFController {
      * @return this returns the F constant.
      */
     public double F() {
-        return coefficients.getCoefficient(feedForwardInput);
+        return coefficients.getCoefficient()*feedForwardInput;
     }
 
     /**

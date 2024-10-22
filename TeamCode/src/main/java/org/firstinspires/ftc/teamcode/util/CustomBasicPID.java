@@ -50,8 +50,8 @@ public class CustomBasicPID implements FeedbackController {
         previousError = error;
 
         return error * coefficients.Kp
-                + integralSum * coefficients.Ki
-                + derivative * coefficients.Kd;
+                + integralSum * coefficients.Ki;
+//                + derivative * coefficients.Kd;
     }
 
     /**
@@ -69,7 +69,8 @@ public class CustomBasicPID implements FeedbackController {
     }
 
     protected double calculateError(double reference, double state) {
-        return reference - state;
+//        return Math.signum(reference-state)*(Math.sqrt(Math.abs(reference-state)));
+          return reference-state;
     }
 
     protected void integrate(double error, double dt) {

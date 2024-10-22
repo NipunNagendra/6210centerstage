@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
+import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
@@ -25,15 +26,15 @@ public class HeadingPIDTest extends OpMode {
     private FtcDashboard dashboard;
 
 
-    public static double hP = 0.5;
+    public static double hP = .2;
     public static double hI = 0;
-    public static double hD = 100;
+    public static double hD = 10;
     public static double targetHeading = 0.0;
-    public static CustomBasicPID headingController;
+    public static CustomBasicSQUID headingController;
 
     @Override
     public void init() {
-        headingController = new CustomBasicPID(new PIDCoefficients(hP, hI, hD));
+        headingController = new CustomBasicSQUID(new PIDCoefficients(hP, hI, hD));
         localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         localizer.setPose(0,0,0);
         dashboard = FtcDashboard.getInstance();
@@ -51,7 +52,7 @@ public class HeadingPIDTest extends OpMode {
         // Update the PID controller with the current position and target
         double currentHeading = AngleUnit.normalizeRadians(robotPose.heading);
         double error = AngleUnit.normalizeRadians(targetHeading - currentHeading);
-        double headingPower = headingController.calculate(0, -error);
+        double headingPower = headingController.calculate(0, error);
 //        if((Math.abs(error) <= 0.017453)){
 //            headingPower=0;
 //        }
