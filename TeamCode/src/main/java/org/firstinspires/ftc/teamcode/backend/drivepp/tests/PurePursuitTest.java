@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.backend.drivepp.Waypoint;
 import org.firstinspires.ftc.teamcode.util.TelemetryDrawer;
 import org.firstinspires.ftc.teamcode.util.geometry.Point;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
-import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicPID;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,11 +13,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
+import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicSQUID;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicSQUIDOG;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
-import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 @Config
@@ -25,23 +25,23 @@ import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 public class XPIDTest extends OpMode {
 
     private Drivetrain drivetrain;
-    private TwoWheelIMULocalizerLegacy localizer;
+    private RawOtosLocalizer localizer;
     private ElapsedTime runtime;
     private FtcDashboard dashboard;
 
 
-    public static double xP = 0.02;
+    public static double xP = 0.01;
     public static double xI = 0;
-    public static double xD = 8;
+    public static double xD = 2;
     public static double targetX = 0.0;
-    public static CustomBasicSQUID xController;
+    public static CustomBasicSQUIDOG xController;
 
     public static CustomBasicSQUID headingController;
 
     @Override
     public void init() {
-        xController = new CustomBasicSQUID(new PIDCoefficients(xP, xI, xD));
-        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
+        xController = new CustomBasicSQUIDOG(new PIDCoefficients(xP, xI, xD));
+        localizer = new RawOtosLocalizer(hardwareMap);
         localizer.setPose(0,0,0);
         dashboard = FtcDashboard.getInstance();
         drivetrain = new Drivetrain(hardwareMap);
@@ -64,7 +64,7 @@ public class XPIDTest extends OpMode {
         // Update the PID controller with the current position and target
         double currentHeading = robotPose.heading;
         double error = AngleUnit.normalizeRadians(0 - currentHeading);
-        double headingPower = headingController.calculate(0, -error);
+        double headingPower = headingController.calculate(0, error);
 
         drivetrain.setRobotWeightedDrivePower(new Pose(-xPower, 0, headingPower));
 
@@ -82,7 +82,6 @@ public class XPIDTest extends OpMode {
         fieldOverlay.strokeCircle(robotPose.x, robotPose.y, 9); // 9 is the radius of the robot, adjust as needed
         fieldOverlay.strokeLine(robotPose.x, robotPose.y, robotPose.x + Math.cos(robotPose.heading) * 9, robotPose.y + Math.sin(robotPose.heading) * 9);
         telemetry.update();
-        localizer.update();
         dashboard.sendTelemetryPacket(packet);
 
     }

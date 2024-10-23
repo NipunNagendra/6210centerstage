@@ -23,16 +23,16 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
-import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
+import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicSQUID;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicSQUIDOG;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
-import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
 @Config
 @Autonomous
 public class P2PTest extends OpMode {
     Drivetrain drivetrain;
-    TwoWheelIMULocalizerLegacy localizer;
+    RawOtosLocalizer localizer;
     private FtcDashboard dashboard;
 
     public static double targetX= 20;
@@ -43,7 +43,7 @@ public class P2PTest extends OpMode {
     public Pose targetPose = new Pose(targetX, targetY, targetH);
     public Pose robotPose2 = new Pose(0, 0, 0);
 
-    public static CustomBasicSQUID xController = new CustomBasicSQUID(new PIDCoefficients(xP, xI, xD));
+    public static CustomBasicSQUIDOG xController = new CustomBasicSQUIDOG(new PIDCoefficients(xP, xI, xD));
     public static CustomBasicSQUID yController = new CustomBasicSQUID(new PIDCoefficients(yP, yI, yD));
     public static CustomBasicSQUID hController = new CustomBasicSQUID(new PIDCoefficients(hP, hI, hD));
 
@@ -62,7 +62,7 @@ public class P2PTest extends OpMode {
 
     public void init() {
         drivetrain = new Drivetrain(hardwareMap);
-        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
+        localizer = new RawOtosLocalizer(hardwareMap);
         dashboard = FtcDashboard.getInstance();
 
         TelemetryPacket packet = new TelemetryPacket();
@@ -90,7 +90,6 @@ public class P2PTest extends OpMode {
 
         fieldOverlay.strokeCircle(targetPose.x, targetPose.y,2);
         telemetry.update();
-        localizer.update();
         dashboard.sendTelemetryPacket(packet);
 
         execute();
@@ -115,7 +114,7 @@ public class P2PTest extends OpMode {
 
         double currentHeading = robotPose.heading;
         double error = AngleUnit.normalizeRadians(targetPose.heading - currentHeading);
-        double hPower = hController.calculate(0, -error);
+        double hPower = hController.calculate(0, error);
         if((Math.abs(error) <= 0.017453)){
             hPower=0;
         }

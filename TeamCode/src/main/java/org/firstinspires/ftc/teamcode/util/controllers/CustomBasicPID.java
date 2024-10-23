@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.controllers;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.FeedbackController;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
@@ -50,8 +50,8 @@ public class CustomBasicPID implements FeedbackController {
         previousError = error;
 
         return error * coefficients.Kp
-                + integralSum * coefficients.Ki;
-//                + derivative * coefficients.Kd;
+                + integralSum * coefficients.Ki
+                + derivative * coefficients.Kd;
     }
 
     /**

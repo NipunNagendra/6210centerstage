@@ -12,8 +12,9 @@ import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
+import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
 
-@TeleOp(name = "Localization Test", group = "Test")
+@TeleOp(name = "Localization Test OTOS", group = "Test")
 @Config
 public class LocalizationTestOTOS extends LinearOpMode {
     private RawOtosLocalizer localizer;
@@ -65,8 +66,13 @@ public class LocalizationTestOTOS extends LinearOpMode {
             else{
                 multiplier=1;
             }
-            drivetrain.setRobotWeightedDrivePower(new Pose(gamepad1.left_stick_y*multiplier,
-                    gamepad1.left_stick_x*multiplier, -gamepad1.right_stick_x*multiplier));
+            Vector2D drive = new Vector2D(gamepad1.left_stick_y*multiplier, gamepad1.left_stick_x*multiplier);
+            drive.setX(0.5*Math.tan(1.12*drive.x));
+            drive.setY(0.5*Math.tan(1.12*drive.y));
+//            drive.setX(0.5*(Math.pow(drive.x,3)+drive.x));
+//            drive.setY(0.5*(Math.pow(drive.y,3)+drive.y));
+            drivetrain.setRobotWeightedDrivePower(new Pose(drive.x,
+                    drive.y, gamepad1.right_stick_x*multiplier));
 
             loopTime.reset();
 

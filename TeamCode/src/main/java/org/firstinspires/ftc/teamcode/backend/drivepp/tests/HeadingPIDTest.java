@@ -11,22 +11,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
-import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
-import org.firstinspires.ftc.teamcode.util.CustomBasicSQUID;
+import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicSQUID;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
-import org.firstinspires.ftc.teamcode.util.CustomBasicPID;
 
 @Config
 @Autonomous
 public class HeadingPIDTest extends OpMode {
 
     private Drivetrain drivetrain;
-    private TwoWheelIMULocalizerLegacy localizer;
+    private RawOtosLocalizer localizer;
     private ElapsedTime runtime;
     private FtcDashboard dashboard;
 
 
-    public static double hP = .2;
+    public static double hP = .22;
     public static double hI = 0;
     public static double hD = 10;
     public static double targetHeading = 0.0;
@@ -35,7 +34,7 @@ public class HeadingPIDTest extends OpMode {
     @Override
     public void init() {
         headingController = new CustomBasicSQUID(new PIDCoefficients(hP, hI, hD));
-        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
+        localizer = new RawOtosLocalizer(hardwareMap);
         localizer.setPose(0,0,0);
         dashboard = FtcDashboard.getInstance();
         drivetrain = new Drivetrain(hardwareMap);
@@ -83,7 +82,6 @@ public class HeadingPIDTest extends OpMode {
         fieldOverlay.strokeCircle(robotPose.x, robotPose.y, 9); // 9 is the radius of the robot, adjust as needed
         fieldOverlay.strokeLine(robotPose.x, robotPose.y, robotPose.x + Math.cos(robotPose.heading) * 9, robotPose.y + Math.sin(robotPose.heading) * 9);
         telemetry.update();
-        localizer.update();
         dashboard.sendTelemetryPacket(packet);
 
     }

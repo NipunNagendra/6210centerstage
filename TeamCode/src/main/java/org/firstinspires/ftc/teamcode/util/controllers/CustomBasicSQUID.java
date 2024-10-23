@@ -1,11 +1,8 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.controllers;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.FeedbackController;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
-import com.ThermalEquilibrium.homeostasis.Utils.Timer;
-import com.qualcomm.robotcore.util.Range;
 
-public class CustomBasicSQUID extends CustomBasicPID {
+public class CustomBasicSQUID extends CustomBasicPIDTweaked {
     public CustomBasicSQUID(PIDCoefficients coefficients) {
         super(coefficients);
     }
