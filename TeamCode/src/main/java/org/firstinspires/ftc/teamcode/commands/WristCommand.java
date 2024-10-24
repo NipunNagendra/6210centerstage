@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+@Config
 public class WristCommand extends CommandBase {
 
     // Enum for wrist positions
@@ -14,6 +18,9 @@ public class WristCommand extends CommandBase {
 
     private final IntakeSubsystem intakeSubsystem;
     private final WristPosition wristPosition; // Holds the desired wrist position
+    public static double leftPos = 0.0;
+    public static double midPos = 0.5;
+    public static double rightPos = 1.0;
 
 
     public WristCommand(IntakeSubsystem subsystem, WristPosition position) {
@@ -26,13 +33,13 @@ public class WristCommand extends CommandBase {
     public void initialize() {
         switch (wristPosition) {
             case LEFT:
-                intakeSubsystem.setWristPosition(0.0);
+                intakeSubsystem.setWristPosition(leftPos);
                 break;
             case MIDDLE:
-                intakeSubsystem.setWristPosition(0.5);
-                break;
+                intakeSubsystem.setWristPosition(midPos);
+                break; // break nipun nagendra's brain
             case RIGHT:
-                intakeSubsystem.setWristPosition(1.0);
+                intakeSubsystem.setWristPosition(rightPos);
                 break;
         }
     }

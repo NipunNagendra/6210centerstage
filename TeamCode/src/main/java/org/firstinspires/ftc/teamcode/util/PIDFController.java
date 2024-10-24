@@ -10,7 +10,6 @@ public class PIDFController {
     private double errorIntegral;
     private double errorDerivative;
     private double feedForwardInput;
-    private double filteredDerivative;
 
     private long previousUpdateTimeNano;
     private long deltaTimeNano;
@@ -31,7 +30,7 @@ public class PIDFController {
      * @return this returns the value of the PIDF from the current error.
      */
     public double runPIDF() {
-        return error * P() + filteredDerivative * D() + errorIntegral * I() + F();
+        return error * P() + errorDerivative * D() + errorIntegral * I() + F();
     }
 
     /**

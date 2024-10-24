@@ -123,6 +123,7 @@ public class SimpleTeleOp extends CommandOpMode {
         telemetry.addData("angle", Math.toDegrees(arm.armAngle()));
         telemetry.addData("pos", arm.getExtendoPosition());
         telemetry.addData("posex", arm.getExtendoPower());
+        telemetry.addData("extendocurrent", arm.getExtendoCurrent());
 
 //        telemetry.addLine(arm.getCurrentCommand().toString());
         TelemetryPacket packet = new TelemetryPacket();
@@ -130,7 +131,7 @@ public class SimpleTeleOp extends CommandOpMode {
 
         // Send telemetry data to the dashboard
         packet.put("current", arm.armAngle());
-        packet.put("target", arm.getArmTarget());
+//        packet.put("target", arm.getArmTarget());
 
 
         loopTime = loop;

@@ -7,7 +7,8 @@ public class CustomPIDFCoefficients {
     @JvmField public double I;
     @JvmField public double D;
     @JvmField public double F;
-    @JvmField public double T;
+
+    public FeedForwardConstant feedForwardConstantEquation;
 
     private boolean usingEquation;
 
@@ -19,12 +20,11 @@ public class CustomPIDFCoefficients {
      * @param d the coefficient for the derivative factor.
      * @param f the coefficient for the feedforward factor.
      */
-    public CustomPIDFCoefficients(double p, double i, double d, double f, double t) {
+    public CustomPIDFCoefficients(double p, double i, double d, double f) {
         P = p;
         I = i;
         D = d;
         F = f;
-        T = t;
     }
 
     /**
@@ -36,12 +36,19 @@ public class CustomPIDFCoefficients {
      * @param d the coefficient for the derivative factor.
      * @param f the equation for the feedforward factor.
      */
+    public CustomPIDFCoefficients(double p, double i, double d, FeedForwardConstant f) {
+        usingEquation = true;
+        P = p;
+        I = i;
+        D = d;
+        feedForwardConstantEquation = f;
+    }
 
     /**
      * This returns the coefficient for the feedforward factor.
      *
-     * @param input this is inputted into the feedforward equation, if applicable. If there's no
-     *              equation, then any input can be used.
+//     * @param input this is inputted into the feedforward equation, if applicable. If there's no
+//     *              equation, then any input can be used.
      * @return This returns the coefficient for the feedforward factor.
      */
     public double getCoefficient() {

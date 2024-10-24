@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.util.CustomPIDFCoefficients;
 
@@ -25,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase {
     private static final double ARM_MIN = 0;
     private static final double ARM_MAX = 1.9;
     private static double power = 0;
-    CustomPIDFCoefficients pid = new CustomPIDFCoefficients(4, 0, 0, ARM_F);
+    CustomPIDFCoefficients pid = new CustomPIDFCoefficients(3, 0, 0, ARM_F);
 
     private PIDFController armPID;
 
@@ -82,8 +83,14 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void manualControl(double stickInput) {
-            armTarget = armAngle() - (stickInput * 0.1);  // Adjust the speed multiplier here
-            moveArmTo(armTarget);
+        if (Math.signum(stickInput) == 1) {
+            armTarget = armAngle() - (stickInput * 0.1);
+        }
+        else {
+            armTarget = armAngle() - (stickInput * 0.2);
+        }
+        // Adjust the speed multiplier here
+        moveArmTo(armTarget);
 
     }
 
@@ -96,6 +103,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
     public double getExtendoPower() {
         return power;
+    }
+    public double getExtendoCurrent() {
+        return extendo.getCurrent(CurrentUnit.AMPS);
     }
     public double getArmTarget(){
         return armPID.getTargetPosition();

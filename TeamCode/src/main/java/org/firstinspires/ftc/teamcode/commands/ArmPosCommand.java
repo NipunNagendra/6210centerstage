@@ -33,7 +33,7 @@ public class ArmPosCommand extends CommandBase {
             return Math.sin(input) * ARM_F;
         }
     }
-    public static CustomPIDFCoefficients PID = new CustomPIDFCoefficients(1, 0.02, 0.02, ARM_F,1);
+    public static CustomPIDFCoefficients PID = new CustomPIDFCoefficients(1, 0.02, 0.02, ARM_F);
 
 
     private PIDFController armPID = new PIDFController(PID);
