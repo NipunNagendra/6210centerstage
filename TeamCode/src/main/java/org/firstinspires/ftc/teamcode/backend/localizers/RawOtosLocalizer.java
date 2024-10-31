@@ -37,7 +37,7 @@ public class RawOtosLocalizer {
     }
 
     public void setPose(double x, double y, double h) {
-        myOtos.setPosition(new SparkFunOTOS.Pose2D(x, y, h));
+        myOtos.setPosition(new SparkFunOTOS.Pose2D(y, x, h));
     }
 
 

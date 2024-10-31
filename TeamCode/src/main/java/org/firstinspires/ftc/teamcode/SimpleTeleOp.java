@@ -18,10 +18,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
+import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.commands.ArmCommand;
 import org.firstinspires.ftc.teamcode.commands.ArmPosCommand;
 import org.firstinspires.ftc.teamcode.commands.ArmPresetCommand;
+import org.firstinspires.ftc.teamcode.commands.ExtendoPresetCommand;
 import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.ManualArmControlCommand;
 import org.firstinspires.ftc.teamcode.commands.ManualExtendoControlCommand;
@@ -39,7 +41,7 @@ import java.util.function.DoubleSupplier;
 @Config
 public class SimpleTeleOp extends CommandOpMode {
 
-    private TwoWheelIMULocalizerLegacy localizer;
+    private RawOtosLocalizer localizer;
     private GamepadEx gamepadEx;
     private GamepadEx gamepadEx2;
     private ArmSubsystem arm;
@@ -48,12 +50,12 @@ public class SimpleTeleOp extends CommandOpMode {
     private TelemetryDrawer drawer;
     private double loopTime = 0.0;
     private FtcDashboard dashboard;
+    public static double armMacro = 0.06232724778825527;
 
 
 
     @Override
     public void initialize() {
-        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
         dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();
         drawer = new TelemetryDrawer(packet);
@@ -62,14 +64,15 @@ public class SimpleTeleOp extends CommandOpMode {
         arm = new ArmSubsystem(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap);
 
+        localizer=new RawOtosLocalizer(hardwareMap);
 
         CommandScheduler.getInstance().reset();
+        CommandScheduler.getInstance().registerSubsystem(arm);
         gamepadEx = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
         CommandScheduler.getInstance().schedule(new RunCommand(() -> {
-            localizer.update();
-            driveSystem.setHolonomicPower(new Pose(gamepadEx.getLeftY(), gamepadEx.getLeftX(), -gamepadEx.getRightX()));
+            driveSystem.setHolonomicPower(new Pose(-gamepadEx.getLeftY(), gamepadEx.getLeftX(), gamepadEx.getRightX()*0.6));
         }, driveSystem));
 
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
@@ -97,6 +100,9 @@ public class SimpleTeleOp extends CommandOpMode {
 ////            new ManualExtendoControlCommand(arm, () -> gamepad2.right_stick_y)));
 //            );
 
+//        gamepadEx2.getGamepadButton(GamepadKeys.Button.A).whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
+//            new ArmPresetCommand(arm, armMacro).schedule();
+//        })));
 
 
 
@@ -107,15 +113,15 @@ public class SimpleTeleOp extends CommandOpMode {
             new ManualArmControlCommand(arm, () -> (gamepad2.right_stick_y), () -> (gamepad2.right_trigger-gamepad2.left_trigger)));
 
 
-//        gamepadEx2.getGamepadButton(GamepadKeys.Button.A).whenPressed(() -> CommandScheduler.getInstance().schedule(new RunCommand(() -> {
-//            new ArmPresetCommand(arm, 0).schedule();
-//        })));
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.B).whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
+            new ExtendoPresetCommand(arm, armMacro).schedule();
+        })));
     }
 
     @Override
     public void run() {
         CommandScheduler.getInstance().run();
-        drawer.drawPose(localizer.getPose(), "#FF0000", 9);
+//        drawer.drawPose(localizer.getPose(), "#FF0000", 9);
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
         telemetry.addData("ms", (loop - loopTime) / 1000000);
@@ -125,14 +131,15 @@ public class SimpleTeleOp extends CommandOpMode {
         telemetry.addData("posex", arm.getExtendoPower());
         telemetry.addData("extendocurrent", arm.getExtendoCurrent());
 
+
 //        telemetry.addLine(arm.getCurrentCommand().toString());
         TelemetryPacket packet = new TelemetryPacket();
         // Drive the robot
 
         // Send telemetry data to the dashboard
-        packet.put("current", arm.armAngle());
-//        packet.put("target", arm.getArmTarget());
-
+        packet.put("current", arm.getExtendoPosition());
+        packet.put("target", armMacro);
+        packet.put("currentangle", arm.armAngle());
 
         loopTime = loop;
         telemetry.update();

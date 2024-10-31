@@ -15,8 +15,10 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.backend.drivepp.Drivetrain;
 import org.firstinspires.ftc.teamcode.backend.drivepp.tests.XPIDTest;
+import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
 import org.firstinspires.ftc.teamcode.backend.localizers.TwoWheelIMULocalizerLegacy;
 import org.firstinspires.ftc.teamcode.backend.drivepp.tests.YPIDTest;
+import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicSQUID;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 import org.firstinspires.ftc.teamcode.util.geometry.Vector2D;
 import org.firstinspires.ftc.teamcode.util.controllers.CustomBasicPID;
@@ -27,10 +29,10 @@ import java.util.LinkedList;
 @TeleOp(name = "GVF Test", group = "Test")
 @Config
 public class GVFHeadingTest extends LinearOpMode {
-    private TwoWheelIMULocalizerLegacy localizer;
+    private RawOtosLocalizer localizer;
     private FtcDashboard dashboard;
     private Drivetrain drivetrain;
-    public static CustomBasicPID hController;
+    public static CustomBasicSQUID hController;
     public static CustomBasicPID xController = new CustomBasicPID(new PIDCoefficients(XPIDTest.xP, 0, XPIDTest.xD));
     public static CustomBasicPID yController = new CustomBasicPID(new PIDCoefficients(YPIDTest.yP, 0, YPIDTest.yD));
     CubicBezierCurve curve;
@@ -40,33 +42,33 @@ public class GVFHeadingTest extends LinearOpMode {
     public static double startX=0;
     public static double startY=0;
     public static double startH=0;
-    public static double power=1;
+    public static double power=0.2;
 
 
     @Override
     public void runOpMode() {
         drivetrain = new Drivetrain(hardwareMap);
-        localizer = new TwoWheelIMULocalizerLegacy(hardwareMap);
+        localizer = new RawOtosLocalizer(hardwareMap);
         localizer.setPose(startX, startY, startH);
         dashboard = FtcDashboard.getInstance();
         curve = new CubicBezierCurve(
                 new Vector2D(0, 0),
-                new Vector2D(50, 0),
-                new Vector2D(60, 60),
-                new Vector2D(120, 120));
+                new Vector2D(20, 0),
+                new Vector2D(30, 0),
+                new Vector2D(100, 0));
+        resistingPoints.add(new Vector2D(40,0));
 
         // Initialize the TelemetryDrawer
         TelemetryPacket packet = new TelemetryPacket();
         drawer = new TelemetryDrawer(packet);
         drawer.drawBezierCurve(curve, "#00FF00");
         dashboard.sendTelemetryPacket(packet);
-        hController = new CustomBasicPID(new PIDCoefficients(0.4, 0, 0.3));
+        hController = new CustomBasicSQUID(new PIDCoefficients(0.22, 0, 10));
 
 
         waitForStart();
 
         while (opModeIsActive()) {
-            localizer.update();
             Pose pose = localizer.getPose();
 
             // Clear previous drawings
@@ -79,8 +81,8 @@ public class GVFHeadingTest extends LinearOpMode {
             packet.put("x", pose.x);
             packet.put("y", pose.y);
             packet.put("heading", pose.heading);
-            packet.put("x velocity", localizer.getVelocity().x);
-            packet.put("y velocity", localizer.getVelocity().y);
+//            packet.put("x velocity", localizer.getVelocity().x);
+//            packet.put("y velocity", localizer.getVelocity().y);
 
             telemetry.addData("x", pose.x);
             telemetry.addData("y", pose.y);
@@ -90,8 +92,8 @@ public class GVFHeadingTest extends LinearOpMode {
 
             // acc code
             Vector2D robotPos = new Vector2D(pose.x, pose.y);
-            Vector2D calculatedMovementVector = rbgvfNavigation.calculateGuidanceVector(curve, robotPos, resistingPoints, localizer.getVelocity());
-            double movementDirection = (calculatedMovementVector.getHeading());
+            Vector2D calculatedMovementVector = rbgvfNavigation.calculateGuidanceVector(curve, robotPos, resistingPoints, new Vector2D(0, 0));
+            double movementDirection = AngleUnit.normalizeRadians(calculatedMovementVector.getHeading());
 
             double currentHeading = pose.heading;
             double error = AngleUnit.normalizeRadians(movementDirection - currentHeading);
@@ -109,7 +111,7 @@ public class GVFHeadingTest extends LinearOpMode {
             y_rotated = Range.clip(y_rotated, -MAX_TRANSLATIONAL_SPEED, MAX_TRANSLATIONAL_SPEED);
 
 //            drivetrain.setFieldWeightedDrivePower(new Pose(0, 0, hPower), 0);
-            drivetrain.setRobotWeightedDrivePower(new Pose(x_rotated, y_rotated, hPower));
+            drivetrain.setRobotWeightedDrivePower(new Pose(-x_rotated, y_rotated, hPower));
 
             drawer.drawBezierCurve(curve, "#00FF00");
             drawer.drawPose(new Pose(pose.x + Math.cos(movementDirection) * 9, pose.y + Math.sin(movementDirection) * 9, movementDirection), "#00FF00", 9);

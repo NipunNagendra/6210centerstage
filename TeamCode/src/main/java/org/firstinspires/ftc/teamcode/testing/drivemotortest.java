@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.testing;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
+@Config
 public class drivemotortest extends OpMode {
 
     DcMotor FL;
@@ -15,7 +18,8 @@ public class drivemotortest extends OpMode {
     DcMotor BL;
     DcMotor BR;
     DcMotor arm;
-    CRServo active;
+    Servo active;
+    public static double pos=0;
 
     @Override
     public void init(){
@@ -29,7 +33,9 @@ public class drivemotortest extends OpMode {
         this.arm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         this.arm.setDirection(DcMotorEx.Direction.REVERSE);
         this.arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        active = hardwareMap.crservo.get("activeIntake");
+        active = hardwareMap.servo.get("wrist");
+        active.setDirection(Servo.Direction.FORWARD);
+
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -71,11 +77,11 @@ public class drivemotortest extends OpMode {
             telemetry.addLine("BL is moving backward");
         }
         else if(gamepad1.right_bumper){
-            active.setPower(1);
+            active.setPosition(pos);
             telemetry.addLine("Active is moving forward");
         }
         else if(gamepad1.left_bumper){
-            active.setPower(-1);
+            active.setPosition(0);
             telemetry.addLine("Active is moving backward");
         }
         else{

@@ -20,7 +20,7 @@ public class DriveSubsystem extends SubsystemBase {
         BL = hardwareMap.get(DcMotor.class, "BL");
         BR = hardwareMap.get(DcMotor.class, "BR");
 
-        this.FL.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.FL.setDirection(DcMotorSimple.Direction.REVERSE);
         this.BL.setDirection(DcMotorSimple.Direction.REVERSE);
         this.BR.setDirection(DcMotorSimple.Direction.FORWARD);
         this.FR.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -34,10 +34,21 @@ public class DriveSubsystem extends SubsystemBase {
     }
     //sets robot relative power, raw function dont do calc here just give power
     public void setHolonomicPower(Pose drivePower) {
-        FL.setPower(drivePower.getX() - drivePower.getY() + drivePower.heading);
-        BL.setPower(drivePower.getX() + drivePower.getY() + drivePower.heading);
-        FR.setPower(drivePower.getX() + drivePower.getY() - drivePower.heading);
-        BR.setPower(drivePower.getX() - drivePower.getY() - drivePower.heading);
+        Pose vel = drivePower;
+
+        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading) > 1) {
+            double denom =  Math.abs(drivePower.getX()) + Math.abs(drivePower.getY()) + Math.abs(drivePower.heading);
+            vel = new Pose(
+                    drivePower.getX(),
+                    drivePower.getY(),
+                    drivePower.heading).scale(1/denom);
+        }
+
+
+        FL.setPower(vel.getX() - vel.getY() -  vel.heading);
+        FR.setPower(vel.getX() + vel.getY() +  vel.heading);
+        BL.setPower(vel.getX() +  vel.getY() - vel.heading);
+        BR.setPower(vel.getX() -  vel.getY() +  vel.heading);
     }
     public void setTankPower(double f,double t){
         FL.setPower(f+t);

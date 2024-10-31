@@ -14,17 +14,19 @@ public class ArmPresetCommand extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
         armSubsystem.moveArmTo(targetAngle);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(armSubsystem.getArmPosition() - targetAngle) < 0.05; // Ends when arm reaches the target
+
+//        return Math.abs(armSubsystem.armAngle() - targetAngle) < 0.05;
+        return true;// Ends when arm reaches the target
     }
 
     @Override
     public void end(boolean interrupted) {
-        armSubsystem.setRawArmPower(0); // Stop arm when command ends
+//        armSubsystem.setRawArmPower(0); // Stop arm when command ends
     }
 }

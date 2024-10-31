@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+
 @Config
-public class WristCommand extends CommandBase {
+public class CombinedIntakeCommand extends CommandBase {
 
     // Enum for wrist positions
     public enum WristPosition {
@@ -21,11 +20,14 @@ public class WristCommand extends CommandBase {
     public static double leftPos = 0.0;
     public static double midPos = 0;
     public static double rightPos = 0.26;
+    private static double intakePowerSupplier;
 
 
-    public WristCommand(IntakeSubsystem subsystem, WristPosition position) {
+
+    public CombinedIntakeCommand(IntakeSubsystem subsystem, WristPosition position, double intakePower) {
         intakeSubsystem = subsystem;
         wristPosition = position;
+        intakePowerSupplier = intakePower;
         addRequirements(intakeSubsystem);
     }
 
@@ -42,6 +44,7 @@ public class WristCommand extends CommandBase {
                 intakeSubsystem.setWristPosition(rightPos);
                 break;
         }
+        intakeSubsystem.setIntakePower(intakePowerSupplier);
     }
 
     @Override

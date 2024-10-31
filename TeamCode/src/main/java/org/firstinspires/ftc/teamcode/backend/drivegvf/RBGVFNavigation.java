@@ -24,8 +24,8 @@ public class RBGVFNavigation {
 
         Vector2D driveVector = curve.derivative(closestT);
         Vector2D correctionVector = closestPoint.subtract(currentLocation);
-        Vector2D centripetalVector = centripetalCorrectiveVector(curve, closestT, robotVelocity, driveVector);
-        correctionVector.add(centripetalVector);
+//        Vector2D centripetalVector = centripetalCorrectiveVector(curve, closestT, robotVelocity, driveVector);
+//        correctionVector.add(centripetalVector);
         double CORRECTION_DISTANCE = 80 * SCALE_FACTOR; // Scaled down
         Vector2D endPoint = curve.calculate(1);
         double SAVING_THROW_DISTANCE = 100 * SCALE_FACTOR; // Scaled down
@@ -67,8 +67,8 @@ public class RBGVFNavigation {
             Vector2D toResistingObject = resistingObject.subtract(currentLocation);
             double distance = toResistingObject.getMagnitude();
 
-            if (distance < 100 * SCALE_FACTOR) { // Scaled down
-                double normalizedDistance = distance / (100 * SCALE_FACTOR);
+            if (distance < 500 * SCALE_FACTOR) { // Scaled down
+                double normalizedDistance = distance / (500 * SCALE_FACTOR);
                 double repulsionStrength = (1 - Math.pow(normalizedDistance, 2)); // Quadratic falloff
 
                 // Perpendicular repulsion
@@ -79,7 +79,7 @@ public class RBGVFNavigation {
                 movementVector = movementVector.subtract(perpendicularRepulsionVector.normalize().scalarMultiply(repulsionStrength));
 
                 // Apply parallel repulsion if distance from closest point on curve is below a threshold
-                if (currentLocation.subtract(closestPoint).getMagnitude() > 100 * SCALE_FACTOR) { // Scaled down
+                if (currentLocation.subtract(closestPoint).getMagnitude() > 500 * SCALE_FACTOR) { // Scaled down
                     Vector2D parallel = tangent;
                     double parallelComponent = toResistingObject.dot(parallel);
                     Vector2D parallelRepulsionVector = parallel.scalarMultiply(parallelComponent);

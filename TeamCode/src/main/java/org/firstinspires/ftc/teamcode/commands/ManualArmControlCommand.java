@@ -22,8 +22,9 @@ public class ManualArmControlCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armSubsystem.manualControl(stickInput.getAsDouble());
-        double current = armSubsystem.getExtendoCurrent();
+          armSubsystem.manualControl(stickInput.getAsDouble());
+
+//        double current = armSubsystem.getExtendoCurrent();
 //
 //        if (power_on && current > 1){
 //            power_on=false;
@@ -32,7 +33,7 @@ public class ManualArmControlCommand extends CommandBase {
 //        else if (!power_on && current<0.2) {
 //            power_on=true;
 //        }
-        armSubsystem.setRawExtendoPower(Range.clip((stickInputx.getAsDouble() - (0.07+ current)),0,1));
+        armSubsystem.setRawExtendoPower(stickInputx.getAsDouble());
 
 
     }
