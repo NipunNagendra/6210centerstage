@@ -27,6 +27,6 @@ public class ExtendoPresetCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        armSubsystem.setRawExtendoPower(0); // Stop arm when command ends
+//        armSubsystem.setRawExtendoPower(0); // Stop arm when command ends
     }
 }

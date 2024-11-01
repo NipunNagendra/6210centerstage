@@ -33,7 +33,8 @@ public class ManualArmControlCommand extends CommandBase {
 //        else if (!power_on && current<0.2) {
 //            power_on=true;
 //        }
-        armSubsystem.setRawExtendoPower(stickInputx.getAsDouble());
+            armSubsystem.setRawExtendoPower(stickInputx.getAsDouble());
+
 
 
     }

@@ -113,9 +113,9 @@ public class SimpleTeleOp extends CommandOpMode {
             new ManualArmControlCommand(arm, () -> (gamepad2.right_stick_y), () -> (gamepad2.right_trigger-gamepad2.left_trigger)));
 
 
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.B).whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
-            new ExtendoPresetCommand(arm, armMacro).schedule();
-        })));
+//        gamepadEx2.getGamepadButton(GamepadKeys.Button.B).whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> {
+//            new ExtendoPresetCommand(arm, armMacro).schedule();
+//        })));;
     }
 
     @Override
@@ -127,9 +127,9 @@ public class SimpleTeleOp extends CommandOpMode {
         telemetry.addData("ms", (loop - loopTime) / 1000000);
         telemetry.addData("kg", gamepadEx2.getRightY());
         telemetry.addData("angle", Math.toDegrees(arm.armAngle()));
-        telemetry.addData("pos", arm.getExtendoPosition());
-        telemetry.addData("posex", arm.getExtendoPower());
-        telemetry.addData("extendocurrent", arm.getExtendoCurrent());
+//        telemetry.addData("pos", arm.getExtendoPosition());
+//        telemetry.addData("posex", arm.getExtendoPower());
+//        telemetry.addData("extendocurrent", arm.getExtendoCurrent());
 
 
 //        telemetry.addLine(arm.getCurrentCommand().toString());
@@ -139,7 +139,7 @@ public class SimpleTeleOp extends CommandOpMode {
         // Send telemetry data to the dashboard
         packet.put("current", arm.getExtendoPosition());
         packet.put("target", armMacro);
-        packet.put("currentangle", arm.armAngle());
+//        packet.put("currentangle", arm.armAngle());
 
         loopTime = loop;
         telemetry.update();

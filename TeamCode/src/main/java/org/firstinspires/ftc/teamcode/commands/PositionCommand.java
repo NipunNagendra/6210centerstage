@@ -42,8 +42,8 @@ public class PositionCommand extends CommandBase {
     public Pose targetPose = new Pose(targetX, targetY, targetH);
     public Pose robotPose2 = new Pose(0, 0, 0);
 
-    public static CustomBasicSQUIDOG xController = new CustomBasicSQUIDOG(new PIDCoefficients(xP, xI, xD));
-    public static CustomBasicSQUID yController = new CustomBasicSQUID(new PIDCoefficients(yP, yI, yD));
+    public static CustomBasicSQUIDOG yController = new CustomBasicSQUIDOG(new PIDCoefficients(xP, xI, xD));
+    public static CustomBasicSQUID xController = new CustomBasicSQUID(new PIDCoefficients(yP, yI, yD));
     public static CustomBasicSQUID hController = new CustomBasicSQUID(new PIDCoefficients(hP, hI, hD));
 
     public static double ALLOWED_TRANSLATIONAL_ERROR = 1;

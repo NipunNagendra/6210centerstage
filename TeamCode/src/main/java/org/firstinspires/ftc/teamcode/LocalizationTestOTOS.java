@@ -22,13 +22,16 @@ public class LocalizationTestOTOS extends LinearOpMode {
     private Drivetrain drivetrain;
     ElapsedTime loopTime = new ElapsedTime();
     double multiplier = 1;
+    public static double x=0;
+    public static double y=0;
+    public static double h=0;
 
     @Override
     public void runOpMode() {
         drivetrain = new Drivetrain(hardwareMap);
         localizer = new RawOtosLocalizer(hardwareMap);
         dashboard = FtcDashboard.getInstance();
-
+        localizer.setPose(x,y,h);
         waitForStart();
 
         while (opModeIsActive()) {

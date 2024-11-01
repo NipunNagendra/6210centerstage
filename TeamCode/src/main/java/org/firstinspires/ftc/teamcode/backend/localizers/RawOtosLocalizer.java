@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 public class RawOtosLocalizer {
     private SparkFunOTOS myOtos;
+    private double hOffset;
     public RawOtosLocalizer(HardwareMap hardwareMap) {
         myOtos = hardwareMap.get(SparkFunOTOS.class, "otos");
         configureOtos();
@@ -18,7 +19,7 @@ public class RawOtosLocalizer {
 
     public Pose getPose() {
         SparkFunOTOS.Pose2D pos = myOtos.getPosition();
-        return new Pose(pos.y, -pos.x, pos.h);
+        return new Pose(pos.x, pos.y, pos.h+hOffset);
     }
 
     public Pose[] getPosVelAcc(){
@@ -37,7 +38,8 @@ public class RawOtosLocalizer {
     }
 
     public void setPose(double x, double y, double h) {
-        myOtos.setPosition(new SparkFunOTOS.Pose2D(y, x, h));
+        myOtos.setPosition(new SparkFunOTOS.Pose2D(x, y, h));
+        hOffset=h;
     }
 
 

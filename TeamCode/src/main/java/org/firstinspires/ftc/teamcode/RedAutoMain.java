@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.ParallelDeadlineGroup;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -18,23 +17,17 @@ import org.firstinspires.ftc.teamcode.backend.localizers.RawOtosLocalizer;
 import org.firstinspires.ftc.teamcode.commands.ArmPresetCommand;
 import org.firstinspires.ftc.teamcode.commands.CombinedIntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.ExtendoPresetCommand;
-import org.firstinspires.ftc.teamcode.commands.IntakeCommand;
-import org.firstinspires.ftc.teamcode.commands.ManualArmControlCommand;
-import org.firstinspires.ftc.teamcode.commands.ManualExtendoControlCommand;
 import org.firstinspires.ftc.teamcode.commands.PositionCommand;
-import org.firstinspires.ftc.teamcode.commands.WristCommand;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.util.TelemetryDrawer;
 import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
-import java.util.function.DoubleSupplier;
-
 
 @Autonomous
 @Config
-public class RedAuto extends CommandOpMode {
+public class RedAutoMain extends CommandOpMode {
 
     private RawOtosLocalizer localizer;
     private GamepadEx gamepadEx;
@@ -60,28 +53,29 @@ public class RedAuto extends CommandOpMode {
         intake = new IntakeSubsystem(hardwareMap);
 
         localizer=new RawOtosLocalizer(hardwareMap);
-        localizer.setPose(0,0,0);
+        localizer.setPose(-15,-62,Math.PI/2);
 
 
         ParallelDeadlineGroup scorePreload = new ParallelDeadlineGroup(
-                new PositionCommand(driveSystem, localizer, new Pose(20,0,0)),
+                new PositionCommand(driveSystem, localizer, new Pose(-15,-42,Math.PI/2)),
                 new InstantCommand(() -> {
                     new ArmPresetCommand(arm, 0.134).schedule();
                 }),
                 new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.RIGHT, -0.05)
         );
-        //goes to the 1
+
         ParallelCommandGroup goToFirstSample = new ParallelCommandGroup(
-                new PositionCommand(driveSystem, localizer, new Pose()),
+                new PositionCommand(driveSystem, localizer, new Pose(-29.8,-27.10,Math.PI)),
                 new InstantCommand(() -> {
-                    new ArmPresetCommand(arm, 0).schedule();
+                    new ArmPresetCommand(arm, -10).schedule();
                     new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 0);
                 })
         );
+
         //intakes
         SequentialCommandGroup intakeSample = new SequentialCommandGroup(
                 new ExtendoPresetCommand(arm, 20),
-                new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, -2),
+                new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, -1),
                 new WaitCommand(2000),
                 new ExtendoPresetCommand(arm, 0)
         );
@@ -90,11 +84,6 @@ public class RedAuto extends CommandOpMode {
                 new PositionCommand(driveSystem, localizer, new Pose()),
                 new ArmPresetCommand(arm, 1.5),
                 new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, -0.05)
-        );
-        // goes to the 2
-        ParallelCommandGroup goToSecondSample = new ParallelCommandGroup(
-                new PositionCommand(driveSystem, localizer, new Pose()),
-                new ArmPresetCommand(arm, 0)
         );
 
         TelemetryPacket packet2 = new TelemetryPacket();
@@ -108,25 +97,11 @@ public class RedAuto extends CommandOpMode {
                 new SequentialCommandGroup(
                         scorePreload,
                         new WaitCommand(2000),
-                        new ExtendoPresetCommand(arm, 1500),
+                        new ExtendoPresetCommand(arm, -1500),
                         new ExtendoPresetCommand(arm, 0),
                         goToFirstSample,
-                        intakeSample,
-                        goToBucket,
-                        new ExtendoPresetCommand(arm, 2800),
-                        new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 2),
-                        new WaitCommand(1000),
-                        new ExtendoPresetCommand(arm, 0),
+                        intakeSample
 
-                        goToSecondSample,
-                        intakeSample,
-                        goToBucket,
-                        new ExtendoPresetCommand(arm, 2800),
-                        new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 2),
-                        new WaitCommand(1000),
-                        new ExtendoPresetCommand(arm, 0),
-
-                        new PositionCommand(driveSystem, localizer, new Pose())
                 )
         );
 //        CommandScheduler.getInstance().setDefaultCommand(arm, new ArmPresetCommand(arm, 0.2));
