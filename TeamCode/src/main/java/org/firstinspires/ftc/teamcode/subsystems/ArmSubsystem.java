@@ -94,11 +94,11 @@ public class ArmSubsystem extends SubsystemBase {
         armPID.setTargetPosition(armTarget);
         armPID.updatePosition(armAngle());
         armMotor.setPower(-armPID.runPIDF());
-//
-//        extendoPID.setTargetPosition(extendoTarget);
-//        extendoPID.updatePosition(getExtendoPosition());
-//        double val = extendoPID.runPIDF();
-//        extendo.setPower(Math.signum(val)*(Math.sqrt(Math.abs(val))));
+
+        extendoPID.setTargetPosition(extendoTarget);
+        extendoPID.updatePosition(getExtendoPosition());
+        double val = extendoPID.runPIDF();
+        extendo.setPower(Math.signum(val)*(Math.sqrt(Math.abs(val))));
     }
 
 
