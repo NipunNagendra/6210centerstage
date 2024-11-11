@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.util.geometry.Pose;
 
 @Autonomous
 @Config
-public class RedAutoMain extends CommandOpMode {
+public class RedAutoMainRED extends CommandOpMode {
 
     private RawOtosLocalizer localizer;
     private GamepadEx gamepadEx;
@@ -59,7 +59,7 @@ public class RedAutoMain extends CommandOpMode {
 
 
         ParallelCommandGroup scorePreload = new ParallelCommandGroup(
-                new PositionCommand(driveSystem, localizer, new Pose(-15,-40,Math.PI/2)),
+                new PositionCommand(driveSystem, localizer, new Pose(-15,-45,Math.PI/2)),
                 new InstantCommand(() -> {
                     new ArmPresetCommand(arm, (Math.toRadians(firstPreloadAngle))).schedule();
                 }),
@@ -100,8 +100,9 @@ public class RedAutoMain extends CommandOpMode {
         CommandScheduler.getInstance().registerSubsystem(arm);
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
+                        new WaitCommand(9000),
                         scorePreload,
-                        new WaitCommand(2000),
+                        new WaitCommand(1500),
                         new ExtendoPresetCommand(arm, -1200),
                         new InstantCommand(() -> {
                             new ArmPresetCommand(arm, (Math.toRadians(firstPreloadAngle2))).schedule();

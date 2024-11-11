@@ -63,9 +63,9 @@ public class SimpleTeleOp extends CommandOpMode {
         driveSystem = new DriveSubsystem(hardwareMap);
         arm = new ArmSubsystem(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap);
-
+//        arm.setTeleOp(true);
         localizer=new RawOtosLocalizer(hardwareMap);
-
+        arm.setTeleopState(true);
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(arm);
         gamepadEx = new GamepadEx(gamepad1);
@@ -137,8 +137,8 @@ public class SimpleTeleOp extends CommandOpMode {
         // Drive the robot
 
         // Send telemetry data to the dashboard
-        packet.put("current", arm.getExtendoPosition());
-        packet.put("target", armMacro);
+        packet.put("target", arm.getArmTarget());
+        packet.put("current", arm.getArmPosition());
 //        packet.put("currentangle", arm.armAngle());
 
         loopTime = loop;

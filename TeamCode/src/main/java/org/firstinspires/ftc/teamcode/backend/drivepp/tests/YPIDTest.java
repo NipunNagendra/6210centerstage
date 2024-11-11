@@ -26,9 +26,9 @@ public class YPIDTest extends OpMode {
     private FtcDashboard dashboard;
 
 
-    public static double yP = 0.05;
+    public static double yP = 0.01;
     public static double yI = 0;
-    public static double yD = 3;
+    public static double yD = 0;
     public static double targetY = 0.0;
     public static double targetX = 0.0;
     public static double targetHeading = 0.0;
@@ -61,7 +61,7 @@ public class YPIDTest extends OpMode {
         Pose robotPose = localizer.getPose();
 
         double currentX = robotPose.x;
-        double xPower = xController.calculate(targetX, currentX);
+        double xPower = -xController.calculate(targetX, currentX);
 //        if((Math.abs(0 -currentX) <= 0.08)){
 //            xPower=0;
 //        }
@@ -75,7 +75,7 @@ public class YPIDTest extends OpMode {
 
         yController.setCoefficients(new PIDCoefficients(yP, yI,yD));
         double currentY = robotPose.y;
-        double yPower = yController.calculate(targetY, currentY);
+        double yPower = -yController.calculate(targetY, currentY);
 //        if((Math.abs(targetY-robotPose.y) <= 0.09)){
 //            yPower=0;
 //        }

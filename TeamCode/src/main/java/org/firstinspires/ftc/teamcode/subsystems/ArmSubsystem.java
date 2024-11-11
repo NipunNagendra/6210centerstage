@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,10 +19,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final DcMotorEx armMotor;
     private final DcMotorEx extendo;
-    public static double armP=2;
+    public static double armP=0.3;
     public static double armD=0.01;
     public static double exP = 0.001;
     public static double exD;
+
 
 
     private double armStart;
@@ -30,7 +32,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private static final double ARM_F = 0.3;
     private static final double TICK_PER_RAD = ((((1 + (46.0 / 11.0))) * (1 + (46.0 / 11.0))) * 28) / (2 * Math.PI) / 0.333;
-    private static final double ARM_MIN = Math.toRadians(-40);
+    private static final double ARM_MIN = Math.toRadians(-60);
     private static final double ARM_MAX = Math.toRadians(84);
     private static final double EXTENDO_MIN = 0;
     private static final double EXTENDO_MAX = 2900;
@@ -40,6 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private PIDFController armPID;
     private PIDFController extendoPID;
+    public static boolean teleopState = true;
 
 
     public ArmSubsystem(HardwareMap hardwareMap) {
@@ -74,7 +77,12 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor.setPower(power);
     }
     public void setRawExtendoPower(double power) {
+        extendoTarget=extendo.getCurrentPosition();
         extendo.setPower(power);
+    }
+
+    public void setTeleopState(boolean update){
+        teleopState=update;
     }
 
 
@@ -95,31 +103,33 @@ public class ArmSubsystem extends SubsystemBase {
         armPID.updatePosition(armAngle());
         armMotor.setPower(-armPID.runPIDF());
 
-        extendoPID.setTargetPosition(extendoTarget);
-        extendoPID.updatePosition(getExtendoPosition());
-        double val = extendoPID.runPIDF();
-        extendo.setPower(Math.signum(val)*(Math.sqrt(Math.abs(val))));
+//        if (!teleopState) {
+            extendoPID.setTargetPosition(extendoTarget);
+            extendoPID.updatePosition(getExtendoPosition());
+            double val = extendoPID.runPIDF();
+            extendo.setPower(Math.signum(val)*(Math.sqrt(Math.abs(val))));
+//        }
     }
 
 
 
     public void moveExtendoTo(double targetTicks) {
-        if(-targetTicks>EXTENDO_MAX){
-            targetTicks=EXTENDO_MAX;
-        }
-        else if(-targetTicks<EXTENDO_MIN){
-            targetTicks=EXTENDO_MIN;
-        }
+//        if(-targetTicks>EXTENDO_MAX){
+//            targetTicks=EXTENDO_MAX;
+//        }
+//        else if(-targetTicks<EXTENDO_MIN){
+//            targetTicks=EXTENDO_MIN;
+//        }
         extendoTarget=targetTicks;
     }
 
     public void manualExtendoControl(double stickInput) {
 
         if (Math.signum(stickInput) == 1) {
-            extendoTarget = extendoTarget - (stickInput * 50);
+            armTarget = armTarget - (stickInput * 50);
         }
         else {
-            extendoTarget = extendoTarget - (stickInput * 50);
+            armTarget = armTarget - (stickInput * 50);
         }
 
         // Adjust the speed multiplier here
@@ -130,10 +140,10 @@ public class ArmSubsystem extends SubsystemBase {
     public void manualControl(double stickInput) {
 
         if (Math.signum(stickInput) == 1) {
-            armTarget = armAngle() - (stickInput * 0.1);
+            armTarget = armAngle() - (stickInput * 0.9);
         }
         else {
-            armTarget = armAngle() - (stickInput * 0.2);
+            armTarget = armAngle() - (stickInput * 0.9);
         }
 
         // Adjust the speed multiplier here

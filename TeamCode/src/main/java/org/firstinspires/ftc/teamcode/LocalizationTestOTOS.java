@@ -30,6 +30,9 @@ public class LocalizationTestOTOS extends LinearOpMode {
     public void runOpMode() {
         drivetrain = new Drivetrain(hardwareMap);
         localizer = new RawOtosLocalizer(hardwareMap);
+
+
+
         dashboard = FtcDashboard.getInstance();
         localizer.setPose(x,y,h);
         waitForStart();
