@@ -108,23 +108,23 @@ public class RedAuto extends CommandOpMode {
                 new SequentialCommandGroup(
                         scorePreload,
                         new WaitCommand(2000),
-                        new ExtendoPresetCommand(arm, 1500),
-                        new ExtendoPresetCommand(arm, 0),
+                       // new ExtendoPresetCommand(arm, 1500),
+                        //new ExtendoPresetCommand(arm, 0),
                         goToFirstSample,
                         intakeSample,
                         goToBucket,
-                        new ExtendoPresetCommand(arm, 2800),
-                        new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 2),
+                        //new ExtendoPresetCommand(arm, 2800),
+                        //new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 2),
                         new WaitCommand(1000),
-                        new ExtendoPresetCommand(arm, 0),
+                        //new ExtendoPresetCommand(arm, 0),
 
                         goToSecondSample,
                         intakeSample,
                         goToBucket,
-                        new ExtendoPresetCommand(arm, 2800),
-                        new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 2),
+                        //new ExtendoPresetCommand(arm, 2800),
+                        //new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 2),
                         new WaitCommand(1000),
-                        new ExtendoPresetCommand(arm, 0),
+                        //new ExtendoPresetCommand(arm, 0),
 
                         new PositionCommand(driveSystem, localizer, new Pose())
                 )

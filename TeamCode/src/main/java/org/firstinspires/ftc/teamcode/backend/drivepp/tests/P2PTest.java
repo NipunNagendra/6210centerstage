@@ -135,6 +135,4 @@ public class P2PTest extends OpMode {
 
         return new Pose(x_rotated, y_rotated, hPower);
     }
-
-
 }

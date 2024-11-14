@@ -48,7 +48,7 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem(HardwareMap hardwareMap) {
         this.armMotor = hardwareMap.get(DcMotorEx.class, "armMotor");
 //        this.armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        this.armMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        this.armMotor.setDirection(DcMotorEx.Direction.FORWARD);
         this.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 

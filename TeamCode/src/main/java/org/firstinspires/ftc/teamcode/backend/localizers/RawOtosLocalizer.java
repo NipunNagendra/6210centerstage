@@ -19,7 +19,7 @@ public class RawOtosLocalizer {
 
     public Pose getPose() {
         SparkFunOTOS.Pose2D pos = myOtos.getPosition();
-        return new Pose(pos.x, pos.y, pos.h+hOffset);
+        return new Pose(pos.y, -pos.x, pos.h+hOffset);
     }
 
     public Pose[] getPosVelAcc(){
@@ -38,7 +38,7 @@ public class RawOtosLocalizer {
     }
 
     public void setPose(double x, double y, double h) {
-        myOtos.setPosition(new SparkFunOTOS.Pose2D(x, y, h));
+        myOtos.setPosition(new SparkFunOTOS.Pose2D(y, -x, h));
         hOffset=h;
     }
 
