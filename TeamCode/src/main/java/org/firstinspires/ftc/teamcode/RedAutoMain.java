@@ -55,11 +55,11 @@ public class RedAutoMain extends CommandOpMode {
         intake = new IntakeSubsystem(hardwareMap);
 
         localizer=new RawOtosLocalizer(hardwareMap);
-        localizer.setPose(-15,-62,Math.PI/2);
+        localizer.setPose(0,0,0);
 
 
         ParallelCommandGroup scorePreload = new ParallelCommandGroup(
-                new PositionCommand(driveSystem, localizer, new Pose(-15,-40,Math.PI/2)),
+                new PositionCommand(driveSystem, localizer, new Pose(25,0,0)),
                 new InstantCommand(() -> {
                     new ArmPresetCommand(arm, (Math.toRadians(firstPreloadAngle))).schedule();
                 }),
@@ -68,25 +68,25 @@ public class RedAutoMain extends CommandOpMode {
 
         ParallelCommandGroup goToFirstSample = new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    new PositionCommand(driveSystem, localizer, new Pose(-39,-42,Math.PI/2)),
-                    new PositionCommand(driveSystem, localizer, new Pose(-36,-29,-Math.PI))
+                    new PositionCommand(driveSystem, localizer, new Pose(12,0,0)),
+                    new PositionCommand(driveSystem, localizer, new Pose(36,23, Math.toRadians(90)))
                 ),
                 new InstantCommand(() -> {
                     new ArmPresetCommand(arm, -10).schedule();
                     new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, 0);
                 })
         );
-
+//silliness and tomfoolery
         //intakes
         SequentialCommandGroup intakeSample = new SequentialCommandGroup(
-                new ExtendoPresetCommand(arm, 200),
+                new ExtendoPresetCommand(arm, -200),
                 new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, -1),
                 new WaitCommand(2000),
                 new ExtendoPresetCommand(arm, 0)
         );
         //goes to bucket
         ParallelDeadlineGroup goToBucket = new ParallelDeadlineGroup(
-                new PositionCommand(driveSystem, localizer, new Pose()),
+                new PositionCommand(driveSystem, localizer, new Pose(10, 40, Math.toRadians(135))),
                 new ArmPresetCommand(arm, 1.5),
                 new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.MIDDLE, -0.05)
         );
@@ -110,10 +110,11 @@ public class RedAutoMain extends CommandOpMode {
                         new ExtendoPresetCommand(arm,  -0.1),
 //                        new CombinedIntakeCommand(intake, CombinedIntakeCommand.WristPosition.RIGHT, ),
                         goToFirstSample,
-
-
-
+                        new WaitCommand(2000),
                         intakeSample
+                        //new ExtendoPresetCommand(arm,  -0.1),
+                       // goToBucket
+
 
                 )
         );
